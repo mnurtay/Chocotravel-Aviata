@@ -1,14 +1,10 @@
 import xml.dom.minidom
+from getStatus import Status
 
-def get_status(xml_dom):							# get current status fro booking.xml dom
-	status = xml_dom.getElementsByTagName("Status")[2]
-
-	# print("name = " + Status.nodeName)
-
-	status = status.childNodes[0].nodeValue
-
-	return status
-
+def get_status(xml_dom):							# get current status from booking.xml dom
+	departureDate = xml_dom.getElementsByTagName("DepartureDate")[0]
+	status = Status(departureDate.firstChild.nodeValue)
+	return status.get()
 
 def get_rules(xml_dom):								# get fare rule text from fare_rules.xml dom
 	subSection = xml_dom.getElementsByTagName("SubSection")[5]
@@ -32,7 +28,7 @@ def main():
 	fare_rules = get_xml_dom('fare_rules')
 	booking = get_xml_dom('booking')
 
-	print(get_rules(fare_rules))
+	#print(get_rules(fare_rules))
 
 	print(get_status(booking))
 
