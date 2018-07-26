@@ -51,19 +51,22 @@ class Company:
 
         return xml_dom
     
-    def __get_status(self):							# get current status from booking.xml dom
+    def __get_dates(self):							# return current and departure dates
         departureDate = self.booking.getElementsByTagName("DepartureDate")[0].firstChild.nodeValue
         currentDate = datetime.datetime.now().isoformat()
+
         # split string
         departureDate = departureDate.split("T", 1)
         currentDate = currentDate.split("T", 1)
         currentDate[1] = currentDate[1].split(".", 1)[0]
+
         # castDate
-        departureDate = self.__castDate(departureDate)
-        currentDate = self.__castDate(currentDate)
-        return currentDate < departureDate
+        departureDate = self.__cast_date(departureDate)
+        currentDate = self.__cast_date(currentDate)
+
+        return currentDate, departureDate
     
-    def __castDate(self, data):
+    def __cast_date(self, data):
         date = data[0].split("-", 2)
         time = data[1].split(":", 2)
         date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), 
@@ -75,7 +78,7 @@ class Company:
 
         # print("name = " + SubSection.nodeName)
         # print("SubTitle = " + SubSection.getAttribute("SubTitle"))
-
+ 
         paragraph = subSection.getElementsByTagName("Paragraph")[0]
         rules = paragraph.getElementsByTagName("Text")[0]
 
@@ -83,10 +86,10 @@ class Company:
 
     def calculate(self):
         if self.nameCompamy == 'Air Astana':
-            self.__calc_AirAstana()
+            return self.__calc_AirAstana()
 
         elif self.nameCompamy == 'Scat Airlines':
-            self.__calc_Scat()
+            return self.__calc_Scat()
 
     def __calc_AirAstana(self): #aweqweqwe
     	pass
