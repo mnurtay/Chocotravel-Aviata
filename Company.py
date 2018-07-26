@@ -82,13 +82,16 @@ class Company:
         return rules.firstChild.nodeValue
 
     def calculate(self):
-        if not self.__get_status():
-            return "Status was not open"
+        if self.nameCompamy == 'Air Astana':
+            self.__calc_AirAstana()
 
-        return self.__get_status()
+        elif self.nameCompamy == 'Scat Airlines':
+            self.__calc_Scat()
 
+    def __calc_AirAstana(self):
+        pass
 
-
-
+    def __calc_Scat(self):
+        pass
 
 
