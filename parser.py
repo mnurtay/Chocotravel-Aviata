@@ -1,24 +1,4 @@
-import xml.dom.minidom
-from getStatus import Status
-from AstanaAirLine import AirLine
-
-def get_status(xml_dom):							# get current status from booking.xml dom
-	departureDate = xml_dom.getElementsByTagName("DepartureDate")[0]
-	status = Status(departureDate.firstChild.nodeValue)
-	return status.get()
-
-def get_rules(xml_dom):								# get fare_rule_text from fare_rules.xml dom_object
-	subSection = xml_dom.getElementsByTagName("SubSection")[5]
-	# print("name = " + SubSection.nodeName)
-	# print("SubTitle = " + SubSection.getAttribute("SubTitle"))
-	paragraph = subSection.getElementsByTagName("Paragraph")[0]
-	rules = paragraph.getElementsByTagName("Text")[0]
-	return rules.firstChild.nodeValue
-
-def get_xml_dom(file_name):								# get dom_object from xml_file
-	xml_dom = xml.dom.minidom.parse(file_name + '.xml')
-	xml_dom.normalize()
-	return xml_dom
+from Company import Company
 
 def get_tarif(fare_rule_text):						# get tarif`s name from fare_rule_text
 	words = fare_rule_text.split(' ')
@@ -90,19 +70,8 @@ def switch_tarif(minutes, first, second):			# get tarif`s name from minutes, fir
 
 
 def main():
-	fare_rules = get_xml_dom('fare_rules')
-	booking = get_xml_dom('booking')
-	rules = get_rules(fare_rules)
-	tarif = get_tarif(rules)
-	status = get_status(booking)
-	# tarifs: 'Flexible', 'Bet/Economy', 'Bet/Semi', 'Bet/SStandart', 'Bet/SPromo'
-	#		  'Int/Economy', 'Int/Semi', 'Int/SRestricted', 'Int/SPromo'
-	if status:
-		tagCode = booking.getElementsByTagName("OperatingAirlineCode")[0]
-		code = tagCode.firstChild.nodeValue
-		if code == "KC":
-			airLine = AirLine(fare_rules, booking)
-	print(status)
+	company = Company()
+	print(company.calculate())
 
 if __name__ == '__main__':
 	main()
