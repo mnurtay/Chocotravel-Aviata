@@ -1,6 +1,5 @@
 import xml.dom.minidom
-
-from getStatus import Status
+import datetime
 
 class Company:
 
@@ -53,11 +52,24 @@ class Company:
         return xml_dom
     
     def __get_status(self):							# get current status from booking.xml dom
-        departureDate = self.booking.getElementsByTagName("DepartureDate")[0]
-        status = Status(departureDate.firstChild.nodeValue)
-
-        return status.get()
+        departureDate = self.booking.getElementsByTagName("DepartureDate")[0].firstChild.nodeValue
+        currentDate = datetime.datetime.now().isoformat()
+        # split string
+        departureDate = departureDate.split("T", 1)
+        currentDate = currentDate.split("T", 1)
+        currentDate[1] = currentDate[1].split(".", 1)[0]
+        # castDate
+        departureDate = self.__castDate(departureDate)
+        currentDate = self.__castDate(currentDate)
+        return currentDate < departureDate
     
+    def __castDate(self, data):
+        date = data[0].split("-", 2)
+        time = data[1].split(":", 2)
+        date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), 
+                int(time[0]), int(time[1]), int(time[2]))
+        return date
+
     def __get_rules(self, xml_dom):								# get fare_rule_text from fare_rules.xml dom_object
         subSection = xml_dom.getElementsByTagName("SubSection")[5]
 
@@ -73,7 +85,7 @@ class Company:
         if not self.__get_status():
             return "Status was not open"
 
-        return self.taxes
+        return self.__get_status()
 
 
 
