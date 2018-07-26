@@ -84,17 +84,5 @@ class Company:
 
         return rules.firstChild.nodeValue
 
-    def calculate(self):
-        if self.nameCompamy == 'Air Astana':
-            return self.__calc_AirAstana()
-
-        elif self.nameCompamy == 'Scat Airlines':
-            return self.__calc_Scat()
-
-    def __calc_AirAstana(self): #aweqweqwe
-    	pass
-
-    def __calc_Scat(self):
-        pass
-
+    
 
