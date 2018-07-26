@@ -88,8 +88,8 @@ class Company:
         elif self.nameCompamy == 'Scat Airlines':
             self.__calc_Scat()
 
-    def __calc_AirAstana(self):
-        pass
+    def __calc_AirAstana(self): #aweqweqwe
+    	pass
 
     def __calc_Scat(self):
         pass
