@@ -1,5 +1,6 @@
 import xml.dom.minidom
 from getStatus import Status
+from AstanaAirLine import AirLine
 
 def get_status(xml_dom):							# get current status from booking.xml dom
 	departureDate = xml_dom.getElementsByTagName("DepartureDate")[0]
@@ -100,8 +101,7 @@ def main():
 		tagCode = booking.getElementsByTagName("OperatingAirlineCode")[0]
 		code = tagCode.firstChild.nodeValue
 		if code == "KC":
-			
-
+			airLine = AirLine(fare_rules, booking)
 	print(status)
 
 if __name__ == '__main__':
