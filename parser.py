@@ -68,10 +68,12 @@ def switch_tarif(minutes, first, second):			# get tarif`s name from minutes, fir
 
 	return tarif
 
-
 def main():
 	company = Company()
-	print(company.calculate())
+
+	msg = company.calculate()
+	
+	print(msg)
 
 if __name__ == '__main__':
 	main()
