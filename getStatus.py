@@ -22,5 +22,6 @@ class Status:
     def __castDate(self, data):
         date = data[0].split("-", 2)
         time = data[1].split(":", 2)
-        date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), int(time[0]), int(time[1]), int(time[2]))
+        date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), 
+                int(time[0]), int(time[1]), int(time[2]))
         return date

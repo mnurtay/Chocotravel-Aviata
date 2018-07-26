@@ -1,39 +1,22 @@
 import xml.dom.minidom
 from getStatus import Status
 
-<<<<<<< HEAD
 def get_status(xml_dom):							# get current status from booking.xml dom
 	departureDate = xml_dom.getElementsByTagName("DepartureDate")[0]
 	status = Status(departureDate.firstChild.nodeValue)
 	return status.get()
-=======
-def get_status(xml_dom):							# get status from booking.xml dom_object
-	status = xml_dom.getElementsByTagName("Status")[2]
-
-	# print("name = " + Status.nodeName)
-
-	status = status.childNodes[0].nodeValue
-
-	return status
-
->>>>>>> 54ffde3e50ab360f94b9e03f43f4960517992ffe
 
 def get_rules(xml_dom):								# get fare_rule_text from fare_rules.xml dom_object
 	subSection = xml_dom.getElementsByTagName("SubSection")[5]
-
 	# print("name = " + SubSection.nodeName)
 	# print("SubTitle = " + SubSection.getAttribute("SubTitle"))
-
 	paragraph = subSection.getElementsByTagName("Paragraph")[0]
-
 	rules = paragraph.getElementsByTagName("Text")[0]
-	
 	return rules.firstChild.nodeValue
 
 def get_xml_dom(file_name):								# get dom_object from xml_file
 	xml_dom = xml.dom.minidom.parse(file_name + '.xml')
 	xml_dom.normalize()
-
 	return xml_dom
 
 def get_tarif(fare_rule_text):						# get tarif`s name from fare_rule_text
@@ -104,21 +87,22 @@ def switch_tarif(minutes, first, second):			# get tarif`s name from minutes, fir
 
 	return tarif
 
+
 def main():
 	fare_rules = get_xml_dom('fare_rules')
 	booking = get_xml_dom('booking')
-
-<<<<<<< HEAD
-	#print(get_rules(fare_rules))
-=======
 	rules = get_rules(fare_rules)
-
 	tarif = get_tarif(rules)
+	status = get_status(booking)
 	# tarifs: 'Flexible', 'Bet/Economy', 'Bet/Semi', 'Bet/SStandart', 'Bet/SPromo'
 	#		  'Int/Economy', 'Int/Semi', 'Int/SRestricted', 'Int/SPromo'
->>>>>>> 54ffde3e50ab360f94b9e03f43f4960517992ffe
+	if status:
+		tagCode = booking.getElementsByTagName("OperatingAirlineCode")[0]
+		code = tagCode.firstChild.nodeValue
+		if code == "KC":
+			
 
-	print(tarif)
+	print(status)
 
 if __name__ == '__main__':
 	main()
