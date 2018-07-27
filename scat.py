@@ -14,15 +14,15 @@ class Scat:
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
-		self.__set_data()					# setting main values
+		self.__set_values()					# setting main values
 
 		self.ref = ['XR']					# array of refundable taxes` types
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
 
 	def calculate(self):
-		if self.minutes != -1 and self.first != -1 and self.second != -1:
-			if self.__check_status_Scat():
+		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
+			if self.__check_status_Scat():									# check for status
 				# print(self.taxes)
 				# print(self.mode)
 
@@ -32,18 +32,20 @@ class Scat:
 
 				non_ref = self.__calc_taxes()
 
+				print(non_ref)
+
 				# print(coef * self.baseFare)
 				# print(non_ref)
 
-				summ = self.totalFare - coef * self.baseFare - non_ref
+				summ = self.totalFare - coef * self.baseFare - non_ref	# total returned sum
 
 				return summ
 
-			return self.mode
+			return self.mode		# return error
 
-		return self.mode
+		return self.mode			# return error
 
-	def __calc_coef(self):
+	def __calc_coef(self):			# get coef for charge
 		coef = 0
 
 		if self.mode == 'before/before':
@@ -52,7 +54,7 @@ class Scat:
 		elif self.mode == 'before/after':
 			return int(self.second) / 100
 
-	def __calc_taxes(self):
+	def __calc_taxes(self):			# get nonrefundable taxes
 		non_ref = 0
 
 		for tax in self.taxes:
@@ -61,7 +63,7 @@ class Scat:
 
 		return non_ref
 
-	def __check_status_Scat(self):
+	def __check_status_Scat(self):	# check status of flight
 		timedelta = 0
 
 		if self.minutes == 90:
@@ -82,7 +84,7 @@ class Scat:
 
 		return self.now < self.depDate or (self.depDate + timedelta) > self.now
 
-	def __set_data(self):						# get tarif`s name from fare_rule_text
+	def __set_values(self):						# set values for calculating change
 		words = self.rules.split(' ')
 
 		try:

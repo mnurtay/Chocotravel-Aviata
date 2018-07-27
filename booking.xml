@@ -88,14 +88,14 @@
                   <Taxes>
                     <TaxInfo>
                       <TaxType>X</TaxType>
-                      <CountryCode>YQ</CountryCode>
+                      <CountryCode>YR</CountryCode>
                       <Amount>4000</Amount>
                       <Currency>KZT</Currency>
                       <TaxNature>AC</TaxNature>
                     </TaxInfo>
                     <TaxInfo>
                       <TaxType>X</TaxType>
-                      <CountryCode>UJ</CountryCode>
+                      <CountryCode>XR</CountryCode>
                       <Amount>406</Amount>
                       <Currency>KZT</Currency>
                       <TaxNature>AE</TaxNature>
@@ -113,7 +113,7 @@
                       <OperatingAirlineCode>KC</OperatingAirlineCode>
                       <MarketingAirlineCode>KC</MarketingAirlineCode>
                       <Class>M</Class>
-                      <DepartureDate>2019-05-17T18:45:00</DepartureDate>
+                      <DepartureDate>2018-07-27T14:25:00</DepartureDate>
                       <ArrivalDate>2019-05-17T20:30:00</ArrivalDate>
                       <FareBasis>MAPOWKZ</FareBasis>
                       <NotValidBefore>2019-05-17T00:00:00</NotValidBefore>
@@ -151,7 +151,7 @@
                     <AncillaryTicketCoupon>
                       <CpnNumber>1</CpnNumber>
                       <IssuanceSubCode>0B5</IssuanceSubCode>
-                      <OperatingAirline>Air Astana</OperatingAirline>
+                      <OperatingAirline>Scat Airlines</OperatingAirline>
                       <OriginDestination>International, Kazakhstan - International, Kazakhstan</OriginDestination>
                       <StatusCode>I</StatusCode>
                       <Status>Open for Use</Status>
