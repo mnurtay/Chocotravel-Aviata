@@ -3,14 +3,6 @@ import datetime
 
 class Company:
 
-	booking = None
-	fareRule = None
-
-	nameCompamy = ""
-	totalFare = 0
-	baseFare = 0
-	rules = ""
-
 	taxes = []
 
 	def __init__(self, file1, file2):
