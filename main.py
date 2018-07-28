@@ -1,7 +1,7 @@
 from company import Company
 
 def main():
-	company = Company('company', 'fare_rules')
+	company = Company('booking', 'fare_rules')
 
 	msg = company.calculate()
 	
