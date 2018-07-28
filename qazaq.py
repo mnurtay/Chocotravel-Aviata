@@ -17,8 +17,8 @@ class Qazaq:
 		self.non_ref = ['YR', 'YQ']			# array of nonrefundable taxes` types
 
 	def calculate(self):
-		if self.tarif != 'Error' and self.tarif != 'B':
-			if self.__check_status():
+		if self.tarif != 'Error' and self.tarif != 'B':			# check for errors and nonrefundable tarifs
+			if self.__check_status():							# check status
 				print(self.tarif)
 
 				coef = self.__calc_coef()
@@ -33,13 +33,13 @@ class Qazaq:
 
 				return summ
 
-			self.tarif = 'Error'
-			return self.tarif
+			self.tarif = 'Error'	
+			return self.tarif			# return error
 
 		self.tarif = 'Error'
-		return self.tarif
+		return self.tarif				# return error
 
-	def __calc_coef(self):
+	def __calc_coef(self):				# get coef for charge
 		coef = 0
 
 		if self.tarif == 'S':
@@ -47,7 +47,7 @@ class Qazaq:
 
 		return coef
 
-	def __calc_taxes(self):
+	def __calc_taxes(self):				# get nonrefundable taxes
 		non_ref = 0
 
 		for tax in self.taxes:
@@ -56,11 +56,11 @@ class Qazaq:
 
 		return non_ref
 
-	def __check_status(self):
+	def __check_status(self):			# check status of flight
 		return self.now < self.depDate
 
-	def __set_tarif(self):
+	def __set_tarif(self):				# set tarif of flight
 		words = self.rules.split(' ')
 
-		self.tarif = words[0]
+		self.tarif = words[0]			# get the first letter of flight
 
