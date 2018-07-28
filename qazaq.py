@@ -10,42 +10,27 @@ class Qazaq:
 		self.now = dates[0]					# current date
 		self.depDate = dates[1]				# departure date
 
-		self.tarif = 'Error'
+		self.coef = -1						# double between 0-1 or -1
 
-		self.__set_tarif()					# setting tarif
+		self.__set_coef()					# setting coef
 
 		self.non_ref = ['YR', 'YQ']			# array of nonrefundable taxes` types
 
 	def calculate(self):
-		if self.tarif != 'Error' and self.tarif != 'B':			# check for errors and nonrefundable tarifs
+		if self.coef != -1 and self.coef != 1:					# check for errors and nonrefundable tarifs
+
 			if self.__check_status():							# check status
-				print(self.tarif)
-
-				coef = self.__calc_coef()
-
-				print(coef)
-
 				non_ref = self.__calc_taxes()
 
 				print(non_ref)
 
-				summ = self.totalFare - self.baseFare * coef - non_ref
+				summ = self.totalFare - self.baseFare * self.coef - non_ref
 
 				return summ
 
-			self.tarif = 'Error'	
-			return self.tarif			# return error
+			return 'Error'				# return error
 
-		self.tarif = 'Error'
-		return self.tarif				# return error
-
-	def __calc_coef(self):				# get coef for charge
-		coef = 0
-
-		if self.tarif == 'S':
-			coef = 0.3
-
-		return coef
+		return 'Error'					# return error
 
 	def __calc_taxes(self):				# get nonrefundable taxes
 		non_ref = 0
@@ -59,8 +44,17 @@ class Qazaq:
 	def __check_status(self):			# check status of flight
 		return self.now < self.depDate
 
-	def __set_tarif(self):				# set tarif of flight
-		words = self.rules.split(' ')
+	def __set_coef(self):				# set coef of charge
+		lines = self.rules.split('\n')
 
-		self.tarif = words[0]			# get the first letter of flight
+		for line in lines:
+			words = line.split(' ')
+			if 'Возврат' in words[0]:
+				if 'не' in words:
+					self.coef = 1
 
+				else:
+					num = int(words[4].replace('%', ''))
+					self.coef = num / 100
+
+				break

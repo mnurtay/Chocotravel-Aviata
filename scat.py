@@ -21,7 +21,8 @@ class Scat:
 
 	def calculate(self):
 		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
-			if self.__check_status():										# check for status
+		
+			if self.__check_status():										# check status
 				# print(self.taxes)
 				# print(self.mode)
 
