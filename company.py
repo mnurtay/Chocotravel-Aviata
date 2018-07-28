@@ -3,8 +3,6 @@ import datetime
 
 class Company:
 
-	taxes = []
-
 	def __init__(self, file1, file2):
 		self.booking = self.__get_xml_dom(file1)		# dom_object from booking.xml
 		self.fareRule = self.__get_xml_dom(file2)		# dom_object from fare_rules.xml
