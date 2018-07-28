@@ -12,7 +12,7 @@ class Qazaq:
 
 		self.tarif = 'Error'
 
-		self.__set_tarif()
+		self.__set_tarif()					# setting tarif
 
 		self.non_ref = ['YR', 'YQ']			# array of nonrefundable taxes` types
 

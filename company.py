@@ -13,9 +13,9 @@ class Company:
 
 	taxes = []
 
-	def __init__(self):
-		self.booking = self.__get_xml_dom("booking")			# dom_object from booking.xml
-		self.fareRule = self.__get_xml_dom("fare_rules")		# dom_object from fare_rules.xml
+	def __init__(self, file1, file2):
+		self.booking = self.__get_xml_dom(file1)		# dom_object from booking.xml
+		self.fareRule = self.__get_xml_dom(file2)		# dom_object from fare_rules.xml
 
 		self.nameCompamy = self.__get_name()			# name of the air company
 		self.totalFare = self.__get_total_fare()		# total fare of booking
@@ -98,6 +98,7 @@ class Company:
 			from qazaq import Qazaq
 
 			comp = Qazaq(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
+
 
 			return comp.calculate()
 
