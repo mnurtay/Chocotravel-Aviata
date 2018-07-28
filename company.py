@@ -94,5 +94,11 @@ class Company:
 
 			return comp.calculate()
 
+		elif self.nameCompamy == 'Qazaq Air':
+			from qazaq import Qazaq
+
+			comp = Qazaq(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
+
+			return comp.calculate()
 
 	

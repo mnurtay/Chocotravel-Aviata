@@ -16,13 +16,12 @@ class Scat:
 
 		self.__set_values()					# setting main values
 
-		self.ref = ['XR']					# array of refundable taxes` types
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
 
 	def calculate(self):
 		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
-			if self.__check_status_Scat():									# check for status
+			if self.__check_status():										# check for status
 				# print(self.taxes)
 				# print(self.mode)
 
@@ -63,7 +62,7 @@ class Scat:
 
 		return non_ref
 
-	def __check_status_Scat(self):	# check status of flight
+	def __check_status(self):		# check status of flight
 		timedelta = 0
 
 		if self.minutes == 90:

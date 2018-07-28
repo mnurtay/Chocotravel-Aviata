@@ -32,7 +32,7 @@
               <PTC_FareBreakdown>
                 <PassengerTypeQuantity Code="ADT" Quantity="1"/>
                 <PassengerFare>
-                  <BaseFare Amount="14700"/>
+                  <BaseFare Amount="16500"/>
                   <MarkupFare Amount="0"/>
                   <Taxes>
                     <Tax Amount="4406"/>
@@ -82,7 +82,7 @@
                   <PaymentType>CC/EXP M </PaymentType>
                   <AirFareCurrency>KZT</AirFareCurrency>
                   <EquivalentFare>0</EquivalentFare>
-                  <TotalFare>19106</TotalFare>
+                  <TotalFare>24500</TotalFare>
                   <TotalFareCurrency>KZT</TotalFareCurrency>
                   <TicketCurrency>KZT</TicketCurrency>
                   <Taxes>
@@ -96,7 +96,7 @@
                     <TaxInfo>
                       <TaxType>X</TaxType>
                       <CountryCode>XR</CountryCode>
-                      <Amount>406</Amount>
+                      <Amount>4000</Amount>
                       <Currency>KZT</Currency>
                       <TaxNature>AE</TaxNature>
                     </TaxInfo>
@@ -113,7 +113,7 @@
                       <OperatingAirlineCode>KC</OperatingAirlineCode>
                       <MarketingAirlineCode>KC</MarketingAirlineCode>
                       <Class>M</Class>
-                      <DepartureDate>2018-07-27T14:25:00</DepartureDate>
+                      <DepartureDate>2018-08-27T14:25:00</DepartureDate>
                       <ArrivalDate>2019-05-17T20:30:00</ArrivalDate>
                       <FareBasis>MAPOWKZ</FareBasis>
                       <NotValidBefore>2019-05-17T00:00:00</NotValidBefore>
@@ -151,7 +151,7 @@
                     <AncillaryTicketCoupon>
                       <CpnNumber>1</CpnNumber>
                       <IssuanceSubCode>0B5</IssuanceSubCode>
-                      <OperatingAirline>Scat Airlines</OperatingAirline>
+                      <OperatingAirline>Qazaq Air</OperatingAirline>
                       <OriginDestination>International, Kazakhstan - International, Kazakhstan</OriginDestination>
                       <StatusCode>I</StatusCode>
                       <Status>Open for Use</Status>
