@@ -89,7 +89,6 @@ class Company:
 
 			comp = Qazaq(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
 
-
 			return comp.calculate()
 
 	
