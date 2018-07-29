@@ -1,9 +1,23 @@
-from company import Company
+from parser import Parser
+import json
+
+def get_data(text):
+		try:
+			with open(text + '.json') as f:
+				data = json.load(f)
+
+			return data
+
+		except:
+			return None
 
 def main():
-	company = Company('booking', 'fare_rules')
+	booking = get_data('booking')
+	fare_rules = get_data('fare_rules')
 
-	msg = company.calculate()
+	parser = Parser(booking, fare_rules)
+
+	msg = parser.calculate()
 	
 	print(msg)
 
