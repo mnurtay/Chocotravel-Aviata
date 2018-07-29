@@ -88,7 +88,7 @@ class Parser:
 			text = text.replace('    ', '').replace('   ', '').replace('  ', '')
 			text = text.replace(' <br>', '')
 
-			print(text)
+			# print(text)
 
 			return text
 
@@ -128,7 +128,7 @@ class Parser:
 
 				comp = Scat(data)
 
-				return comp.calculate()
+				return 'Change amount is ' + str(comp.calculate())
 
 		else:
 			return 'Error'

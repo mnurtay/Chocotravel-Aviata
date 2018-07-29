@@ -14,14 +14,12 @@ class Scat:
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
-		# print(self.totalFare)
-		# print(self.taxes)
-		# print(self.depDate)
-		# print(self.rules)
+
+		# print('Fare rules is ' + str(self.rules))
 		
 		self.__set_values()					# setting main values
 
-		print(self.minutes, self.first, self.second)
+		# print('Special values are ' + str(self.minutes) + ', ' + str(self.first) + ', ' + str(self.second))
 
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
@@ -30,19 +28,20 @@ class Scat:
 		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
 		
 			if self.__check_status():										# check status
-				# print(self.taxes)
-				# print(self.mode)
+
+				print('Total fare is ' + str(self.totalFare))
+				print('Base fare is ' + str(self.baseFare))
+				print('Taxes are ' + str(self.taxes))
+				print('Departure date is ' + str(self.depDate))
 
 				coef = self.__calc_coef()
 
-				print(coef)
+				print('Coeficient of charge is ' + str(coef))
 
 				non_ref = self.__calc_taxes()
 
-				print(non_ref)
-
-				# print(coef * self.baseFare)
-				# print(non_ref)
+				print('Non refundable taxes are ' + str(self.non_ref))
+				print('Non refundable part is ' + str(non_ref))
 
 				summ = self.totalFare - coef * self.baseFare - non_ref	# total returned sum
 
@@ -52,7 +51,7 @@ class Scat:
 
 		return self.mode			# return error
 
-	def __calc_coef(self):			# get coef for charge
+	def __calc_coef(self):			# get coef of charge
 		coef = 0
 
 		if self.mode == 'before/before':
@@ -79,9 +78,9 @@ class Scat:
 		elif self.minutes == 180:
 			timedelta = datetime.timedelta(hours=3)
 
-		# print(self.now)
-		# print(timedelta)
-		# print(self.depDate)
+		# print('Today`s date is ' + str(self.now))
+		# print('Timedelta is ' + str(timedelta))
+		# print('Departure date is ' + str(self.depDate))
 
 		if self.now + timedelta < self.depDate:
 			self.mode = 'before/before'
@@ -93,8 +92,6 @@ class Scat:
 
 	def __set_values(self):						# set values for calculating change
 		words = self.rules.split(' ')
-
-		print(words)
 
 		try:
 			first_word = words[1].split('.')[2]			# get first_word of fare_rule_text
