@@ -125,10 +125,15 @@ class Parser:
 
 			if self.companyCode == 'DV':	# Scat`s code
 				from scat import Scat
-
+				print("SCAT AirLine\n")
 				comp = Scat(data)
 
 				return 'Change amount is ' + str(comp.calculate())
 
+			elif self.companyCode == "SU":
+				from aeroflot import Aeroflot
+				print("Aeroflot AirLine\n")
+				comp = Aeroflot(data)
+				return 'Change amount is ' + str(comp.calculate())
 		else:
 			return 'Error'
