@@ -88,6 +88,8 @@ class Parser:
 			text = text.replace('    ', '').replace('   ', '').replace('  ', '')
 			text = text.replace(' <br>', '')
 
+			print(text)
+
 			return text
 
 		except:
@@ -125,13 +127,6 @@ class Parser:
 				from scat import Scat
 
 				comp = Scat(data)
-
-				return comp.calculate()
-
-			elif self.companyCode == 'Z9':
-				from qazaq import Qazaq
-
-				comp = Qazaq(data)
 
 				return comp.calculate()
 
