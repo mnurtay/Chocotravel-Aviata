@@ -17,14 +17,22 @@ class Parser:
 
 	def __get_code(self):			# get code of airline company
 		try:
-			return self.booking['passes'][0]['Routes'][0]['OperatingAirlineCode']
+			companyCode = self.booking['passes'][0]['Routes'][0]['OperatingAirlineCode']
+
+			# print(companyCode)
+
+			return companyCode
 
 		except:
 			return 'Error'			# return exception as string 'Error'
 
 	def __get_total_fare(self):		# get total fare of booking
 		try:
-			return self.booking['passes'][0]['TotalFare']
+			totalFare = int(self.booking['passes'][0]['TotalFare'])
+
+			# print(totalFare)
+
+			return totalFare
 
 		except:
 			return -1				# return exception as -1
@@ -42,6 +50,8 @@ class Parser:
 
 				values.append(value)
 
+			# print(values)
+
 			return values
 
 		except:
@@ -53,7 +63,9 @@ class Parser:
 				baseFare = self.totalFare
 
 				for tax in self.taxes:
-					baseFare -= tax[1]
+					baseFare -= int(tax[1])
+
+				# print(baseFare)
 
 				return baseFare
 
@@ -105,19 +117,23 @@ class Parser:
 		return date
 
 	def calculate(self):				# main function of this class, parses code of company and calculates charge
-		data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
-		'taxes': self.taxes, 'dates': self.__get_dates()}
+		if self.totalFare != -1 and self.baseFare != -1 and self.rules != 'Error' and self.taxes != [['Error']] and self.companyCode != 'Error':
+			data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
+			'taxes': self.taxes, 'dates': self.__get_dates()}
 
-		if self.companyCode == 'DV':	# Scat`s code
-			from scat import Scat
+			if self.companyCode == 'DV':	# Scat`s code
+				from scat import Scat
 
-			comp = Scat(data)
+				comp = Scat(data)
 
-			return comp.calculate()
+				return comp.calculate()
 
-		elif self.companyCode == 'Z9':
-			from qazaq import Qazaq
+			elif self.companyCode == 'Z9':
+				from qazaq import Qazaq
 
-			comp = Qazaq(data)
+				comp = Qazaq(data)
 
-			return comp.calculate()
+				return comp.calculate()
+
+		else:
+			return 'Error'

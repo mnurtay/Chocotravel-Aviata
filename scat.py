@@ -14,12 +14,14 @@ class Scat:
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
-		print(self.totalFare)
-		print(self.taxes)
-		print(self.depDate)
-		print(self.rules)
+		# print(self.totalFare)
+		# print(self.taxes)
+		# print(self.depDate)
+		# print(self.rules)
 		
 		self.__set_values()					# setting main values
+
+		print(self.minutes, self.first, self.second)
 
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
@@ -92,8 +94,10 @@ class Scat:
 	def __set_values(self):						# set values for calculating change
 		words = self.rules.split(' ')
 
+		print(words)
+
 		try:
-			first_word = words[1].split('.')[2]			# get first_word of fare_rule_texxt
+			first_word = words[1].split('.')[2]			# get first_word of fare_rule_text
 		except:
 			first_word = ''
 
@@ -109,11 +113,11 @@ class Scat:
 				self.minutes = -1
 
 			try:										# try to define first_charge
-				self.first = int(words[11].split('\n')[0])
+				self.first = int(words[12].split('\n')[0])
 			except:
 				self.first = -1
 
 			try:										# try to define second_charge
-				self.second = int(words[26])
+				self.second = int(words[28])
 			except:
 				self.second = -1
