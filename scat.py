@@ -2,19 +2,24 @@ import datetime
 
 class Scat:
 
-	def __init__(self, totalFare, baseFare, rules, taxes, dates):
-		self.totalFare = int(totalFare)		# total fare ok booking
-		self.baseFare = int(baseFare)		# base fare of booking
-		self.rules = rules					# text of fare rules
-		self.taxes = taxes					# array of pairs type of taxe and its amount
-		self.now = dates[0]					# current date
-		self.depDate = dates[1]				# departure date
+	def __init__(self, data):
+		self.totalFare = int(data['totalFare'])		# total fare ok booking
+		self.baseFare = int(data['baseFare'])		# base fare of booking
+		self.rules = data['rules']					# text of fare rules
+		self.taxes = data['taxes']					# array of pairs type of taxe and its amount
+		self.now = data['dates'][0]					# current date
+		self.depDate = data['dates'][1]				# departure date
 
 		self.minutes = -1					# time gap for rules
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
+
+		# print('Fare rules is ' + str(self.rules))
+		
 		self.__set_values()					# setting main values
+
+		# print('Special values are ' + str(self.minutes) + ', ' + str(self.first) + ', ' + str(self.second))
 
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
@@ -23,19 +28,20 @@ class Scat:
 		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
 		
 			if self.__check_status():										# check status
-				# print(self.taxes)
-				# print(self.mode)
+
+				print('Total fare is ' + str(self.totalFare))
+				print('Base fare is ' + str(self.baseFare))
+				print('Taxes are ' + str(self.taxes))
+				print('Departure date is ' + str(self.depDate))
 
 				coef = self.__calc_coef()
 
-				print(coef)
+				print('Coeficient of charge is ' + str(coef))
 
 				non_ref = self.__calc_taxes()
 
-				print(non_ref)
-
-				# print(coef * self.baseFare)
-				# print(non_ref)
+				print('Non refundable taxes are ' + str(self.non_ref))
+				print('Non refundable part is ' + str(non_ref))
 
 				summ = self.totalFare - coef * self.baseFare - non_ref	# total returned sum
 
@@ -45,7 +51,7 @@ class Scat:
 
 		return self.mode			# return error
 
-	def __calc_coef(self):			# get coef for charge
+	def __calc_coef(self):			# get coef of charge
 		coef = 0
 
 		if self.mode == 'before/before':
@@ -72,9 +78,9 @@ class Scat:
 		elif self.minutes == 180:
 			timedelta = datetime.timedelta(hours=3)
 
-		# print(self.now)
-		# print(timedelta)
-		# print(self.depDate)
+		# print('Today`s date is ' + str(self.now))
+		# print('Timedelta is ' + str(timedelta))
+		# print('Departure date is ' + str(self.depDate))
 
 		if self.now + timedelta < self.depDate:
 			self.mode = 'before/before'
@@ -88,7 +94,7 @@ class Scat:
 		words = self.rules.split(' ')
 
 		try:
-			first_word = words[1].split('.')[2]			# get first_word of fare_rule_texxt
+			first_word = words[1].split('.')[2]			# get first_word of fare_rule_text
 		except:
 			first_word = ''
 
@@ -104,11 +110,11 @@ class Scat:
 				self.minutes = -1
 
 			try:										# try to define first_charge
-				self.first = int(words[11].split('\n')[0])
+				self.first = int(words[12].split('\n')[0])
 			except:
 				self.first = -1
 
 			try:										# try to define second_charge
-				self.second = int(words[26])
+				self.second = int(words[28])
 			except:
 				self.second = -1
