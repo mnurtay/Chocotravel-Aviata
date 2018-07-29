@@ -20,4 +20,4 @@ class Aeroflot:
                 self.ch = 1
             elif self.ch == 1 and 'CHANGES' in rule:
                 
-        #print(rules)
+        print("Ещё не доработан")
