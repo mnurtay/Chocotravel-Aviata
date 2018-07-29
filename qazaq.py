@@ -2,13 +2,13 @@ import datetime
 
 class Qazaq:
 
-	def __init__(self, totalFare, baseFare, rules, taxes, dates):
-		self.totalFare = int(totalFare)		# total fare ok booking
-		self.baseFare = int(baseFare)		# base fare of booking
-		self.rules = rules					# text of fare rules
-		self.taxes = taxes					# array of pairs type of taxe and its amount
-		self.now = dates[0]					# current date
-		self.depDate = dates[1]				# departure date
+	def __init__(self, data):
+		self.totalFare = int(data['totalFare'])		# total fare ok booking
+		self.baseFare = int(data['baseFare'])		# base fare of booking
+		self.rules = data['rules']					# text of fare rules
+		self.taxes = data['taxes']					# array of pairs type of taxe and its amount
+		self.now = data['dates'][0]					# current date
+		self.depDate = data['dates'][1]				# departure date
 
 		self.coef = -1						# double between 0-1 or -1
 
