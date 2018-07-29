@@ -14,6 +14,11 @@ class Scat:
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
+		print(self.totalFare)
+		print(self.taxes)
+		print(self.depDate)
+		print(self.rules)
+		
 		self.__set_values()					# setting main values
 
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
