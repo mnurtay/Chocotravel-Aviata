@@ -15,21 +15,21 @@ class Parser:
 		self.rules = self.__get_rules()
 
 
-	def __get_code(self):
+	def __get_code(self):			# get code of airline company
 		try:
 			return self.booking['passes'][0]['Routes'][0]['OperatingAirlineCode']
 
 		except:
-			return 'Error'
+			return 'Error'			# return exception as string 'Error'
 
-	def __get_total_fare(self):
+	def __get_total_fare(self):		# get total fare of booking
 		try:
 			return self.booking['passes'][0]['TotalFare']
 
 		except:
-			return -1
+			return -1				# return exception as -1
 
-	def __get_taxes(self):
+	def __get_taxes(self):			# get taxes as array of arrays of its type and amount
 		try:
 			taxes = self.booking['passes'][0]['Taxes']
 			values = []
@@ -45,9 +45,9 @@ class Parser:
 			return values
 
 		except:
-			return [['Error']]
+			return [['Error']]		# return exception as [['Error']]
 
-	def __get_base_fare(self):
+	def __get_base_fare(self):		# calculating base fare according to total fare and taxes
 		try:
 			if self.totalFare != -1:
 				baseFare = self.totalFare
@@ -60,10 +60,10 @@ class Parser:
 			else: return -1
 
 		except:
-			return -1
+			return -1				# return exception as -1
 
 
-	def __get_rules(self):
+	def __get_rules(self):			# get text of rules for penalties
 		try:
 			rules = self.fareRule['rules'][0]
 			text = ''
@@ -79,9 +79,9 @@ class Parser:
 			return text
 
 		except:
-			return 'Error'
+			return 'Error'			# return exception as string 'Error'
 
-	def __get_dates(self):				# get current and departure date
+	def __get_dates(self):			# get current and departure date
 		departureDate = self.booking['passes'][0]['Routes'][0]['DepartureDate']
 		currentDate = datetime.datetime.now().isoformat()
 
@@ -96,7 +96,7 @@ class Parser:
 
 		return currentDate, departureDate
 
-	def __cast_date(self, data):
+	def __cast_date(self, data):	# auxillary function for dates
 		date = data[0].split("-", 2)
 		time = data[1].split(":", 2)
 		date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), 
@@ -104,18 +104,20 @@ class Parser:
 
 		return date
 
-	def calculate(self):
+	def calculate(self):				# main function of this class, parses code of company and calculates charge
+		data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
+		'taxes': self.taxes, 'dates': self.__get_dates()}
+
 		if self.companyCode == 'DV':	# Scat`s code
 			from scat import Scat
 
-			comp = Scat(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
+			comp = Scat(data)
 
 			return comp.calculate()
 
 		elif self.companyCode == 'Z9':
 			from qazaq import Qazaq
 
-			comp = Qazaq(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
-
+			comp = Qazaq(data)
 
 			return comp.calculate()
