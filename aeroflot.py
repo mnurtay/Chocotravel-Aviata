@@ -1,3 +1,6 @@
+import requests
+import bs4
+
 class Aeroflot:
     
     def __init__(self, totalFare, baseFare, rules, taxes, dates):
@@ -7,6 +10,7 @@ class Aeroflot:
         self.taxes = taxes
         self.dates = dates
         self.ch = 0
+        self.changeRules = []
 
 
     # Ваш тариф: Эконом Бюджет
@@ -16,8 +20,24 @@ class Aeroflot:
     def __set_coef(self):
         rules = self.rules.split("\n")
         for rule in rules:
-            if 'CANCELLATION' in rule:
+            if "CHANGES" in rule:
                 self.ch = 1
-            elif self.ch == 1 and 'CHANGES' in rule:
+            elif "CANCELLATION" in rule:
+                self.ch = 2
+            if self.ch == 1:
+                self.changeRules.append(rule)
+        
+        for rule in self.changeRules:
+            pass
+        return self.__get_Exchange_Rates("EUR")
+    
+    def __get_Exchange_Rates(self, course):
+        site = requests.get('https://prodengi.kz/currency/')
+        html = bs4.BeautifulSoup(site.text, "html.parser")
+        tenge = html.select('.content_list .'+course+' .price_buy')
+        price = tenge[0].getText()
+        return price
+    
+
                 
-        print("Ещё не доработан")
+        
