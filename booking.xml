@@ -151,7 +151,7 @@
                     <AncillaryTicketCoupon>
                       <CpnNumber>1</CpnNumber>
                       <IssuanceSubCode>0B5</IssuanceSubCode>
-                      <OperatingAirline>Qazaq Air</OperatingAirline>
+                      <OperatingAirline>Aeroflot</OperatingAirline>
                       <OriginDestination>International, Kazakhstan - International, Kazakhstan</OriginDestination>
                       <StatusCode>I</StatusCode>
                       <Status>Open for Use</Status>

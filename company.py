@@ -79,16 +79,24 @@ class Company:
 	def calculate(self):
 		if self.nameCompamy == 'Scat Airlines':
 			from scat import Scat
-
 			comp = Scat(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
-
 			return comp.calculate()
 
 		elif self.nameCompamy == 'Qazaq Air':
 			from qazaq import Qazaq
-
 			comp = Qazaq(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
+<<<<<<< HEAD
 
+=======
+>>>>>>> fe84bfc668342f401a3289e924562bc8bc91b98a
+			return comp.calculate()
+		
+		elif self.nameCompamy == 'Aeroflot':
+			from aeroflot import Aeroflot
+			comp = Aeroflot(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
 			return comp.calculate()
 
-	
+		elif self.nameCompamy == 'BekAir':
+			from BekAir import BekAir
+			comp = BekAir(self.totalFare, self.baseFare, self.rules, self.taxes, self.__get_dates())
+			return comp.calculate()
