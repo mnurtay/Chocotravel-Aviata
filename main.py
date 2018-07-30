@@ -14,8 +14,7 @@ def get_data(text):
 def write_data(data):
 	with open('output.json', 'w') as f:
 		json.dump(data, f, ensure_ascii=False)
-
-
+		
 	print('Success')
 
 def main():

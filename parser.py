@@ -258,13 +258,13 @@ class Parser:
 
 			for booking in bookings:
 				try:
-					given_name = str(booking['GivenName'])
+					given_name = booking['GivenName']
 
 				except:
 					given_name = ''
 
 				try:
-					sur_name = str(booking['Surname'])
+					sur_name = booking['Surname']
 
 				except:
 					sur_name = ''
@@ -283,7 +283,7 @@ class Parser:
 
 				full_names.append(full_name)
 
-				return full_names
+			return full_names
 
 		except:
 			return ['Error']
