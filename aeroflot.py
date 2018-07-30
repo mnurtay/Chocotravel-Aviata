@@ -8,13 +8,13 @@ class Aeroflot:
         self.baseFare = int(data['baseFare'])
         self.rules = data['rules']
         self.taxes = data['taxes']
+        self.sumTaxes = self.totalFare - self.baseFare
         self.dates = data['dates']
         self.ch = 0
         self.changeRules = []
+        self.cancelRulue = []
         self.ofNoShow = True
 
-
-    # Ваш тариф: Эконом Бюджет
     def calculate(self):
         print("Total fare is",self.totalFare)
         print("Base fare is",self.baseFare)
@@ -30,6 +30,8 @@ class Aeroflot:
                 self.ch = 2
             if self.ch == 1:
                 self.changeRules.append(rule)
+            else:
+                self.cancelRulue.append(rule)
         
         self.__check_ofNoShow()
         if not self.ofNoShow and not self.__get_status():
@@ -41,7 +43,7 @@ class Aeroflot:
                 notReturnValue = self.__get_Exchange_Rates(temp[1], float(temp[2]))
             if "TAX" in rule:
                 print(rule)
-        return self.baseFare - notReturnValue
+        return (self.baseFare-notReturnValue)+self.sumTaxes
     
     def __get_Exchange_Rates(self, course, amount):
         site = requests.get('https://prodengi.kz/currency/')
