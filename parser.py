@@ -10,7 +10,7 @@ class Parser:
 		self.company_codes = self.__get_codes()
 		self.total_fares = self.__get_total_fares()
 		self.taxes = self.__get_taxes()
-		self.base_fares = self.__get_base_fares()
+		self.base_fares, self.total_taxes = self.__get_base_fares_total_taxes()
 		self.currencies = self.__get_currencies()
 		self.dates = self.__get_dates()
 		self.full_names = self.__get_full_names()
@@ -30,6 +30,7 @@ class Parser:
 						'baseFare': self.base_fares[i],
 						'taxes': self.taxes[i]
 						'dates': self.dates[i]
+						'company_codes': self.company_codes[i]
 						'rules': self.rules
 					}
 
@@ -132,34 +133,42 @@ class Parser:
 		except:
 			return [[['Error', -1]]]		# return exception as [[['Error']]]
 
-	def __get_base_fares(self):		# calculating base fare according to total fare and taxes
+	def __get_base_fares_total_taxes(self):		# calculating base fare according to total fare and taxes
 		base_fares = []
+		total_taxes = []
 
 		for i in range(len(self.total_fares)):
 			try:
 
 				if self.total_fares[i] != -1 and self.taxes[i] != [['Error', -1]]:
 					base_fare = self.total_fares[i]
+					total_tax = 0
 
 					for taxes in self.taxes[i]:
 						for tax in taxes:
 							try:
 								base_fare -= int(tax[1])
+								total_tax += int(tax[1])
 
 							except:
 								base_fare = base_fare
+								total_tax = total_taxes
 
 					# print(base_fare)
+					# print(total_tax)
 
 					base_fares.append(base_fare)
+					total_taxes.append(total_tax)
 
 				else:
 					base_fares.append(-1)
+					total_taxes.append(-1)
 
 			except:
 				base_fares.append(-1)
+				total_taxes.append(-1)
 
-		return base_fares
+		return base_fares, total_taxes
 
 	def __get_currencies(self):
 		currencies = []
@@ -280,20 +289,37 @@ class Parser:
 		except:
 			return ['Error']
 
-
 	def calculate_all(self):
-		pass
+		result = []
 
-	def calculate(self):				# main function of this class, parses code of company and calculates charge
-		if self.totalFare != -1 and self.baseFare != -1 and self.rules != 'Error' and self.taxes != [['Error']] and self.companyCode != 'Error':
-			data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
-			'taxes': self.taxes, 'dates': self.__get_dates()}
+		for i in range(len(self.data)):
+			try:
+
+				dt = self.__calculate(self.data[i])
+
+				data = {
+					'full_name': self.full_names[i],
+					'data': {
+						'total_fare': self.total_fares[i],
+						'base_fare': self.base_fares[i],
+						'taxes'
+					}
+				}
+				data.append(dt)
+
+			except:
+				data.append('Error': 'Error')
+
+		return result
+
+	def __calculate(self, data):		# main function of this class, parses code of company and calculates charge
+		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != 'Error' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error':
 
 			comp = None
 
 			if self.companyCode == 'DV':	# Scat`s code
 				from scat import Scat
-				print("SCAT AirLine\n")
+				
 				comp = Scat(data)
 
 			elif self.companyCode == 'Z9':	# BekAir`s code
@@ -312,9 +338,9 @@ class Parser:
 				comp = Uzbekistan(data)
 
 			try:
-				return 'Change amount is ' + str(comp.calculate())
+				return comp.calculate()
 
 			except:
-				return 'Error'
+				return {'Error': 'Error'}
 		else:
-			return 'Error'
+			return {'Error': 'Error'}
