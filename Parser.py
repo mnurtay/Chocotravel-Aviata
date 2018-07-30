@@ -121,7 +121,6 @@ class Parser:
 		if self.totalFare != -1 and self.baseFare != -1 and self.rules != 'Error' and self.taxes != [['Error']] and self.companyCode != 'Error':
 			data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
 			'taxes': self.taxes, 'dates': self.__get_dates()}
-
 			if self.companyCode == 'DV':	# Scat`s code
 				from scat import Scat
 				print("SCAT AirLine\n")
@@ -134,9 +133,7 @@ class Parser:
 				print("Aeroflot AirLine\n")
 				comp = Aeroflot(data)
 
-				calc = comp.calculate()
-				output = calc[0]+"\n"+"PERMITTED CHANGE: "+str(calc[1])+" tg"
-				return output
+				return comp.calculate()
 
 			elif self.companyCode ==  "Z9": 
 				from BekAir import BekAir
