@@ -71,14 +71,14 @@ class Parser:
 					total_fares.append(total_fare)
 
 				except:
-					total_fares.append('Error')
+					total_fares.append(-1)
 
 			print(total_fares)
 
 			return total_fares
 
 		except:
-			return ['Error']				# return exception as -1
+			return [-1]				# return exception as -1
 
 	def __get_taxes(self):			# get taxes as array of arrays of its type and amount
 		valuess = []
@@ -104,45 +104,70 @@ class Parser:
 							values.append(value)
 
 						except:
-							values.append(['Error'])
+							values.append(['Error', -1])
 
 					valuess.append(values)
 
 				except:
-					valuess.append([['Error']])
+					valuess.append([['Error', -1]])
 		
 			# print(valuess)
 
 			return valuess
 
 		except:
-			return [[['Error']]]		# return exception as [[['Error']]]
+			return [[['Error', -1]]]		# return exception as [[['Error']]]
 
 	def __get_base_fares(self):		# calculating base fare according to total fare and taxes
-		try:
-			if self.totalFare != -1:
-				baseFare = self.totalFare
+		base_fares = []
 
-				for tax in self.taxes:
-					baseFare -= int(tax[1])
+		for i in range(len(self.total_fares)):
+			try:
 
-				# print(baseFare)
+				if self.total_fares[i] != -1 and self.taxes[i] != [['Error', -1]]:
+					base_fare = self.total_fares[i]
 
-				return baseFare
+					for taxes in self.taxes[i]:
+						for tax in taxes:
+							try:
+								base_fare -= int(tax[1])
 
-			else: return -1
+							except:
+								base_fare = base_fare
 
-		except:
-			return -1				# return exception as -1
+					# print(base_fare)
+
+					base_fares.append(base_fare)
+
+				else:
+					base_fares.append(-1)
+
+			except:
+				base_fares.append(-1)
+
+		return base_fares
 
 	def __get_currencies(self):
-		try:
-			currency = self.booking['passes'][0]['TotalFareCurrency']
+		currencies = []
 
-			return currency
+		try:
+			bookings = self.booking['passes']
+
+			for booking in bookings:
+				try:
+					currency = booking['TotalFareCurrency']
+
+					# print(currency)
+
+					currencies.append(currency)
+
+				except:
+					currencies.append('Error')
+
+			return currencies
 
 		except:
-			return 'Error'
+			return ['Error']
 
 	def __get_rules(self):			# get text of rules for penalties
 		try:
@@ -153,9 +178,9 @@ class Parser:
 				if rule['rule_title'] == 'PENALTIES':
 					text += rule['rule_text']
 
-			text = text.replace('       ', '').replace('      ', '').replace('     ', '')
-			text = text.replace('    ', '').replace('   ', '').replace('  ', '')
-			text = text.replace(' <br>', '')
+			text = text.replace('        ', '').replace('       ', '').replace('      ', '')
+			text = text.replace('     ', '').replace('    ', '').replace('   ', '')
+			text = text.replace('  ', '').replace(' <br>', '')
 
 			# print(text)
 
@@ -165,27 +190,45 @@ class Parser:
 			return 'Error'			# return exception as string 'Error'
 
 	def __get_dates(self):			# get current and departure date
-		departureDate = self.booking['passes'][0]['Routes'][0]['DepartureDate']
-		currentDate = datetime.datetime.now().isoformat()
+		dates = []
 
-		# split string
-		departureDate = departureDate.split("T", 1)
-		currentDate = currentDate.split("T", 1)
-		currentDate[1] = currentDate[1].split(".", 1)[0]
+		try:
+			bookings = self.booking['passes']
 
-		# castDate
-		departureDate = self.__cast_date(departureDate)
-		currentDate = self.__cast_date(currentDate)
+			for booking in bookings:
+				try:
 
-		return currentDate, departureDate
+					departureDate = booking['Routes'][0]['DepartureDate']
+					currentDate = datetime.datetime.now().isoformat()
 
-	def __cast_date(self, data):	# auxillary function for dates
-		date = data[0].split("-", 2)
-		time = data[1].split(":", 2)
-		date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), 
+					# split string
+					departureDate = departureDate.split("T", 1)
+					currentDate = currentDate.split("T", 1)
+					currentDate[1] = currentDate[1].split(".", 1)[0]
+
+					# castDate
+					departureDate = self.__cast_date(departureDate)
+					currentDate = self.__cast_date(currentDate)
+
+					dates.append([currentDate, departureDate])
+
+				except:
+					dates.append(['Error', 'Error'])
+
+			return dates
+
+		except:
+			return [['Error', 'Error']]
+
+	def __cast_date(self, date):	# auxillary function for dates
+		cast_date = date[0].split("-", 2)
+
+		time = date[1].split(":", 2)
+
+		cast_date = datetime.datetime(int(cast_date[0]), int(cast_date[1]), int(cast_date[2]), 
 			int(time[0]), int(time[1]), int(time[2]))
 
-		return date
+		return cast_date
 
 	def calculate_all(self):
 		pass
