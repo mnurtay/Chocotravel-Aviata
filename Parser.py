@@ -134,5 +134,13 @@ class Parser:
 				print("Aeroflot AirLine\n")
 				comp = Aeroflot(data)
 				return 'Change amount is ' + str(comp.calculate())
+
+			elif self.companyCode ==  "Z9": 
+				from BekAir import BekAir
+				print("Bek Air AirLine\n")
+				comp = BekAir(data)
+
+				return 'Change amount is ' + str(comp.calculate())
+
 		else:
 			return 'Error'
