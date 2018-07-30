@@ -14,7 +14,6 @@ class Parser:
 
 		self.rules = self.__get_rules()
 
-
 	def __get_code(self):			# get code of airline company
 		try:
 			companyCode = self.booking['passes'][0]['Routes'][0]['OperatingAirlineCode']
@@ -127,7 +126,7 @@ class Parser:
 
 			if self.companyCode == 'DV':	# Scat`s code
 				from scat import Scat
-
+				print("SCAT AirLine\n")
 				comp = Scat(data)
 
 			elif self.companyCode == 'Z9':	# BekAir`s code
@@ -150,6 +149,5 @@ class Parser:
 
 			except:
 				return 'Error'
-
 		else:
 			return 'Error'
