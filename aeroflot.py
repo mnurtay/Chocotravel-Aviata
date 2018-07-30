@@ -18,11 +18,13 @@ class Aeroflot:
     def calculate(self):
         print("Total fare is",self.totalFare)
         print("Base fare is",self.baseFare)
-        print("Taxes: ",(self.totalFare-self.baseFare),"\n",self.taxes)
+        print("Taxes: ",(self.totalFare-self.baseFare),"\nTypes:")
+        for tax in self.taxes:
+            print("   ", tax[0], "=",tax[1])
         print("Departure Date:",self.dates[1],"\n")
 
         rules = self.rules.split("\n")
-        notReturnValue = None
+        notReturnValue = []
         for rule in rules:
             if "CHANGES" in rule:
                 self.ch = 1
@@ -40,10 +42,13 @@ class Aeroflot:
         for rule in self.changeRules:
             if "REISSUE/REVALIDATION" in rule:
                 temp = rule.split()
-                notReturnValue = self.__get_Exchange_Rates(temp[1], float(temp[2]))
+                notReturnValue.append(rule)
+                notReturnValue.append(self.__get_Exchange_Rates(temp[1], float(temp[2])))
+                break
             if "TAX" in rule:
                 print(rule)
-        return (self.baseFare-notReturnValue)+self.sumTaxes
+        notReturnValue[1] = (self.baseFare-notReturnValue[1])+self.sumTaxes
+        return notReturnValue
     
     def __get_Exchange_Rates(self, course, amount):
         site = requests.get('https://prodengi.kz/currency/')

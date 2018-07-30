@@ -133,7 +133,10 @@ class Parser:
 				from aeroflot import Aeroflot
 				print("Aeroflot AirLine\n")
 				comp = Aeroflot(data)
-				return 'Change amount is ' + str(comp.calculate())
+
+				calc = comp.calculate()
+				output = calc[0]+"\n"+"PERMITTED CHANGE: "+str(calc[1])+" tg"
+				return output
 
 			elif self.companyCode ==  "Z9": 
 				from BekAir import BekAir
