@@ -4,13 +4,13 @@ import json
 class Parser:
 
 	def __init__(self, booking, fare_rules):
-		self.booking = json.loads(booking)
-		self.fare_rule = json.loads(fare_rules)
+		self.booking = booking
+		self.fare_rule = fare_rules
 
 		self.company_codes = self.__get_codes()
 		self.total_fares = self.__get_total_fares()
 		self.taxes = self.__get_taxes()
-		self.base_fares, self.total_taxes = self.__get_base_fares_total_taxes()
+		self.base_fares = self.__get_base_fares_total_taxes()
 		self.currencies = self.__get_currencies()
 		self.dates = self.__get_dates()
 		self.full_names = self.__get_full_names()
@@ -23,14 +23,15 @@ class Parser:
 		if self.__check_pair():
 			data = []
 
-			for i in range(len(company_codes)):
+			for i in range(len(self.company_codes)):
 				try:
 					dt = {
 						'totalFare': self.total_fares[i],
 						'baseFare': self.base_fares[i],
-						'taxes': self.taxes[i]
-						'dates': self.dates[i]
-						'company_codes': self.company_codes[i]
+						'taxes': self.taxes[i],
+						'dates': self.dates[i],
+						'company_codes': self.company_codes[i],
+						'currencies': self.currencies[i],
 						'rules': self.rules
 					}
 
@@ -38,6 +39,8 @@ class Parser:
 
 				except:
 					data.append('Error')
+
+			# print(data)
 
 			return data
 
@@ -51,7 +54,7 @@ class Parser:
 		codes = []
 
 		try:
-			bookings = self.booking['js_ticket']['passes']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
 				try:
@@ -75,7 +78,7 @@ class Parser:
 		total_fares = []
 
 		try:
-			bookings = self.booking['js_ticket']['passes']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
 				try:
@@ -88,7 +91,7 @@ class Parser:
 				except:
 					total_fares.append(-1)
 
-			print(total_fares)
+			# print(total_fares)
 
 			return total_fares
 
@@ -99,12 +102,12 @@ class Parser:
 		valuess = []
 		
 		try:
-			bookings = self.booking['js_ticket']['passes']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
 				values = []
 
-				try;
+				try:
 
 					taxes = booking['Taxes']
 
@@ -135,46 +138,40 @@ class Parser:
 
 	def __get_base_fares_total_taxes(self):		# calculating base fare according to total fare and taxes
 		base_fares = []
-		total_taxes = []
 
 		for i in range(len(self.total_fares)):
 			try:
 
 				if self.total_fares[i] != -1 and self.taxes[i] != [['Error', -1]]:
 					base_fare = self.total_fares[i]
-					total_tax = 0
 
 					for taxes in self.taxes[i]:
-						for tax in taxes:
-							try:
-								base_fare -= int(tax[1])
-								total_tax += int(tax[1])
+						# print(taxes)
 
-							except:
-								base_fare = base_fare
-								total_tax = total_taxes
+						try:
+							base_fare -= int(taxes[1])
+
+						except:
+							base_fare = base_fare
+							
 
 					# print(base_fare)
-					# print(total_tax)
 
 					base_fares.append(base_fare)
-					total_taxes.append(total_tax)
 
 				else:
 					base_fares.append(-1)
-					total_taxes.append(-1)
 
 			except:
 				base_fares.append(-1)
-				total_taxes.append(-1)
 
-		return base_fares, total_taxes
+		return base_fares
 
 	def __get_currencies(self):
 		currencies = []
 
 		try:
-			bookings = self.booking['js_ticket']['passes']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
 				try:
@@ -194,7 +191,7 @@ class Parser:
 
 	def __get_rules(self):			# get text of rules for penalties
 		try:
-			rules = self.fare_rule['tarif_xml']['rules'][0]
+			rules = json.loads(self.fare_rule['tarif_xml'])['rules'][0]
 			text = ''
 
 			for rule in rules:
@@ -216,7 +213,7 @@ class Parser:
 		dates = []
 
 		try:
-			bookings = self.booking['js_ticket']['passes']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
 				try:
@@ -257,34 +254,36 @@ class Parser:
 		full_names = []
 
 		try:
-			bookings = self.booking['js_ticket']['passes']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
 				try:
-					given_name = booking['GivenName']
+					given_name = str(booking['GivenName'])
 
 				except:
 					given_name = ''
 
 				try:
-					sur_name = booking['Surname']
+					sur_name = str(booking['Surname'])
 
 				except:
 					sur_name = ''
 
-				if sur_name == '' and given_name == '':
-					full_name = ''
-
-				elif sur_name == '':
-					full_name = given_name
-
-				elif given_name == '':
-					full_name = sur_name
-
-				else:
+				if sur_name != '' and given_name != '':
 					full_name = given_name + ' ' + sur_name
 
+				elif sur_name != '':
+					full_name = sur_name
+
+				elif given_name != '':
+					full_name = given_name
+
+				else:
+					full_name = ''
+
 				full_names.append(full_name)
+
+				return full_names
 
 		except:
 			return ['Error']
@@ -294,7 +293,11 @@ class Parser:
 
 		for i in range(len(self.data)):
 			try:
+				# print(self.data[i])
+
 				dt = self.__calculate(self.data[i])
+
+				# print(dt)
 
 				data = {}
 
@@ -308,50 +311,99 @@ class Parser:
 
 				try:
 					inner_data['total_fare'] = self.total_fares[i]
-					inner_data['base_fare'] = self.base_fares[i]
-					inner_data['total_taxes'] = self.total_taxes[i]
-					inner_data['taxes'] = self.taxes[i]
-					inner_data['non_refundable taxes'] = dt['non_refundable taxes']
-					inner_data['penalty'] = dt['penalty']
-					inner_data['refunded_fare'] = dt['refunded_fare']
-					inner_data['refunded_taxes'] = dt['refunded_taxes']
-					inner_data['refunded_total'] = dt['refunded_total']
-					inner_data['operating_company'] = dt['name']
-					inner_data['currency'] = self.currencies[i]
-
 				except:
-					inner_data = {'Error': 'Error'}
+					inner_data['total_fare'] = ''
+
+				try:
+					inner_data['base_fare'] = self.base_fares[i]
+				except:
+					inner_data['base_fare'] = ''
+
+				try:
+					inner_data['total_taxes'] = self.total_fares[i] - self.base_fares[i]
+				except:
+					inner_data['total_taxes'] = ''
+
+				try:
+					inner_data['taxes'] = self.taxes[i]
+				except:
+					inner_data['taxes'] = ''
+
+				try:
+					inner_data['non_refundable taxes'] = dt['non_refundable taxes']
+				except:
+					inner_data['non_refundable taxes'] = ''
+
+				try:
+					inner_data['penalty'] = dt['penalty']
+				except:
+					inner_data['penalty'] = ''			
+				
+				try:		
+					inner_data['refunded_fare'] = dt['refunded_fare']
+				except:
+					inner_data['refunded_fare'] = ''
+
+				try:
+					inner_data['refunded_taxes'] = dt['refunded_taxes']
+				except:
+					inner_data['refunded_taxes'] = ''
+
+				try:
+					inner_data['refunded_total'] = dt['refunded_total']
+				except:
+					inner_data['refunded_total'] = ''
+
+				try:
+					inner_data['operating_company'] = dt['name']
+				except:
+					inner_data['operating_company'] = ''
+
+				try:
+					inner_data['currency'] = self.currencies[i]
+				except:
+					inner_data['currency'] = ''
 
 				data['data'] = inner_data
 
-				result.append(dt)
+				result.append(data)
 
 			except:
-				result.append('Error': 'Error')
+				result.append({'Error': 'Errors'})
 
 		return result
 
 	def __calculate(self, data):		# main function of this class, parses code of company and calculates charge
-		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != 'Error' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error':
+		# print(data['totalFare'])
+		# print(data['baseFare'])
+		# # print(data['rules'])
+		# print(data['taxes'])
+		# print(data['company_codes'])
+		# print(data['currencies'])
+		# print(data['dates'])
+
+
+
+		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != 'Error' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
 
 			comp = None
 
-			if self.companyCode == 'DV':	# Scat`s code
+			if data['company_codes'] == 'DV':	# Scat`s code
 				from scat import Scat
 				
 				comp = Scat(data)
 
-			elif self.companyCode == 'Z9':	# BekAir`s code
+			elif data['company_codes'] == 'Z9':	# BekAir`s code
 				from bekair import BekAir
 
 				comp = BekAir(data)
 
-			elif self.companyCode == 'SU':	# Aeroflot`s code
+			elif data['company_codes'] == 'SU':	# Aeroflot`s code
 				from aeroflot import Aeroflot
 
 				comp = Aeroflot(data)
 
-			elif self.companyCode == 'SU':	# Uzbekistan`s code
+			elif data['company_codes'] == 'SU':	# Uzbekistan`s code
 				from uzbekistan import Uzbekistan
 
 				comp = Uzbekistan(data)
