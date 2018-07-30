@@ -294,21 +294,40 @@ class Parser:
 
 		for i in range(len(self.data)):
 			try:
-
 				dt = self.__calculate(self.data[i])
 
-				data = {
-					'full_name': self.full_names[i],
-					'data': {
-						'total_fare': self.total_fares[i],
-						'base_fare': self.base_fares[i],
-						'taxes'
-					}
-				}
-				data.append(dt)
+				data = {}
+
+				try:
+					data['full_name'] = self.full_names[i]
+
+				except:
+					data['full_name'] = ''
+
+				inner_data = {}
+
+				try:
+					inner_data['total_fare'] = self.total_fares[i]
+					inner_data['base_fare'] = self.base_fares[i]
+					inner_data['total_taxes'] = self.total_taxes[i]
+					inner_data['taxes'] = self.taxes[i]
+					inner_data['non_refundable taxes'] = dt['non_refundable taxes']
+					inner_data['penalty'] = dt['penalty']
+					inner_data['refunded_fare'] = dt['refunded_fare']
+					inner_data['refunded_taxes'] = dt['refunded_taxes']
+					inner_data['refunded_total'] = dt['refunded_total']
+					inner_data['operating_company'] = dt['name']
+					inner_data['currency'] = self.currencies[i]
+
+				except:
+					inner_data = {'Error': 'Error'}
+
+				data['data'] = inner_data
+
+				result.append(dt)
 
 			except:
-				data.append('Error': 'Error')
+				result.append('Error': 'Error')
 
 		return result
 
