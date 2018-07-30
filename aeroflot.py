@@ -32,14 +32,15 @@ class Aeroflot:
                 self.changeRules.append(rule)
         
         self.__check_ofNoShow()
-        if not self.ofNoShow and not self.__get_status:
+        if not self.ofNoShow and not self.__get_status():
             return 0
 
         for rule in self.changeRules:
             if "REISSUE/REVALIDATION" in rule:
                 temp = rule.split()
                 notReturnValue = self.__get_Exchange_Rates(temp[1], float(temp[2]))
-
+            if "TAX" in rule:
+                print(rule)
         return self.baseFare - notReturnValue
     
     def __get_Exchange_Rates(self, course, amount):
