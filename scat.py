@@ -14,8 +14,13 @@ class Scat:
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
+		# print('Total fare is ' + str(self.totalFare))
+		# print('Base fare is ' + str(self.baseFare))
+		# print('Taxes are ' + str(self.taxes))
+		# print('Departure date is ' + str(self.depDate))
 
-		# print('Fare rules is ' + str(self.rules))
+
+		print('Fare rules is ' + str(self.rules))
 		
 		self.__set_values()					# setting main values
 
@@ -85,16 +90,16 @@ class Scat:
 		if self.now + timedelta < self.depDate:
 			self.mode = 'before/before'
 
-		elif abs(self.now - self.depDate) < timedelta:
+		elif self.now + timedelta >= self.depDate:
 			self.mode = 'before/after'
 
-		return self.now < self.depDate or (self.depDate + timedelta) > self.now
+		return self.now < self.depDate
 
 	def __set_values(self):						# set values for calculating change
-		words = self.rules.split(' ')
+		lines = self.rules.split('\n')
 
 		try:
-			first_word = words[1].split('.')[2]			# get first_word of fare_rule_text
+			first_word = lines[2].split('.')[2].split(' ')[0]		# get first_word of fare_rule_text
 		except:
 			first_word = ''
 
@@ -105,16 +110,16 @@ class Scat:
 
 		elif first_word == 'CHANGES':					# other tarif`s text begins with 'CHANGES'
 			try:										# try to define minutes
-				self.minutes = int(words[4])
+				self.minutes = int(lines[3].split(' ')[2])
 			except:
 				self.minutes = -1
 
 			try:										# try to define first_charge
-				self.first = int(words[12].split('\n')[0])
+				self.first = int(lines[4].split(' ')[5])
 			except:
 				self.first = -1
 
 			try:										# try to define second_charge
-				self.second = int(words[28])
+				self.second = int(lines[9].split(' ')[3])
 			except:
 				self.second = -1

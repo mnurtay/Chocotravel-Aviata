@@ -123,12 +123,33 @@ class Parser:
 			data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
 			'taxes': self.taxes, 'dates': self.__get_dates()}
 
+			comp = None
+
 			if self.companyCode == 'DV':	# Scat`s code
 				from scat import Scat
 
 				comp = Scat(data)
 
+			elif self.companyCode == 'Z9':	# BekAir`s code
+				from bekair import BekAir
+
+				comp = BekAir(data)
+
+			elif self.companyCode == 'SU':	# Aeroflot`s code
+				from aeroflot import Aeroflot
+
+				comp = Aeroflot(data)
+
+			elif self.companyCode == 'PS':	# Uzbekistan`s code
+				from uzbekistan import Uzbekistan
+
+				comp = Uzbekistan(data)
+
+			try:
 				return 'Change amount is ' + str(comp.calculate())
+
+			except:
+				return 'Error'
 
 		else:
 			return 'Error'
