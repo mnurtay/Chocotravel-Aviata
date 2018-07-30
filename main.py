@@ -3,7 +3,7 @@ from parser import Parser
 
 def get_data(text):
 	try:
-		with open(text + '.json') as f:
+		with open(text + '.json', 'r') as f:
 			data = json.load(f)
 
 		return data
@@ -12,9 +12,8 @@ def get_data(text):
 		return None
 
 def write_data(data):
-	with open('output.json', 'a') as f:
-		for dt in data:
-			json.dump(dt, f, ensure_ascii=False)
+	with open('output.json', 'w') as f:
+		json.dump(data, f, ensure_ascii=False)
 
 
 	print('Success')

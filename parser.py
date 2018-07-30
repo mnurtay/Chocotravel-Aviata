@@ -10,7 +10,7 @@ class Parser:
 		self.company_codes = self.__get_codes()
 		self.total_fares = self.__get_total_fares()
 		self.taxes = self.__get_taxes()
-		self.base_fares = self.__get_base_fares_total_taxes()
+		self.base_fares = self.__get_base_fares()
 		self.currencies = self.__get_currencies()
 		self.dates = self.__get_dates()
 		self.full_names = self.__get_full_names()
@@ -136,7 +136,7 @@ class Parser:
 		except:
 			return [[['Error', -1]]]		# return exception as [[['Error']]]
 
-	def __get_base_fares_total_taxes(self):		# calculating base fare according to total fare and taxes
+	def __get_base_fares(self):		# calculating base fare according to total fare and taxes
 		base_fares = []
 
 		for i in range(len(self.total_fares)):
