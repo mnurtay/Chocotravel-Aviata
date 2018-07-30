@@ -4,59 +4,121 @@ import json
 class Parser:
 
 	def __init__(self, booking, fare_rules):
-		self.booking = json.loads(booking['js_ticket'])
-		self.fareRule = json.loads(fare_rules['tarif_xml'])
+		self.booking = json.loads(booking)
+		self.fareRule = json.loads(fare_rules)
 
 		self.companyCode = self.__get_code()
 		self.totalFare = self.__get_total_fare()
 		self.taxes = self.__get_taxes()
 		self.baseFare = self.__get_base_fare()
+		self.currency = self.__get_currency()
 
 		self.rules = self.__get_rules()
 
-	def __get_code(self):			# get code of airline company
+	def __get_data(self):
+		if self.__check_pair():
+			self.booking = self.booking['js_ticket']
+			self.fareRule = self.fareRule['tarif_xml']
+
+			data = []
+
+			for booking in self.booking['passes']:
+
+
+
+		else:
+			return 'Not valid pair!'
+
+	def __check_pair(self):
+		return self.booking['cid'] == self.fareRule['combination_id']
+
+	def __get_codes(self):			# get code of airline company
+		codes = []
+
 		try:
-			companyCode = self.booking['passes'][0]['Routes'][0]['OperatingAirlineCode']
+			bookings = self.booking['passes']
 
-			# print(companyCode)
+			for booking in bookings:
+				try:
+					code = booking['Routes'][0]['OperatingAirlineCode']
 
-			return companyCode
+					# print(code)
+
+					codes.append(code)
+
+				except:
+					codes.append('Error')
+
+			# print(codes)
+
+			return codes
 
 		except:
-			return 'Error'			# return exception as string 'Error'
+			return ['Error']			# return exception as string 'Error'
 
-	def __get_total_fare(self):		# get total fare of booking
+	def __get_total_fares(self):		# get total fare of booking
+		total_fares = []
+
 		try:
-			totalFare = int(self.booking['passes'][0]['TotalFare'])
+			bookings = self.booking['passes']
 
-			# print(totalFare)
+			for booking in bookings:
+				try:
+					total_fare = int(booking['TotalFare'])
 
-			return totalFare
+					# print(total_fare)
+
+					total_fares.append(total_fare)
+
+				except:
+					total_fares.append('Error')
+
+			print(total_fares)
+
+			return total_fares
 
 		except:
-			return -1				# return exception as -1
+			return ['Error']				# return exception as -1
 
 	def __get_taxes(self):			# get taxes as array of arrays of its type and amount
+		valuess = []
+		
 		try:
-			taxes = self.booking['passes'][0]['Taxes']
-			values = []
+			bookings = self.booking['passes']
 
-			for tax in taxes:
-				value = []
+			for booking in bookings:
+				values = []
 
-				value.append(tax['CountryCode'])
-				value.append(tax['Amount'])
+				try;
 
-				values.append(value)
+					taxes = booking['Taxes']
 
-			# print(values)
+					for tax in taxes:
+						value = []
 
-			return values
+						try:
+
+							value.append(tax['CountryCode'])
+							value.append(tax['Amount'])
+
+							values.append(value)
+
+						except:
+							values.append(['Error'])
+
+					valuess.append(values)
+
+				except:
+					valuess.append([['Error']])
+		
+			# print(valuess)
+
+			return valuess
 
 		except:
-			return [['Error']]		# return exception as [['Error']]
+			return [[['Error']]]		# return exception as [[['Error']]]
 
-	def __get_base_fare(self):		# calculating base fare according to total fare and taxes
+	def __get_base_fares(self):		# calculating base fare according to total fare and taxes
 		try:
 			if self.totalFare != -1:
 				baseFare = self.totalFare
@@ -73,6 +135,14 @@ class Parser:
 		except:
 			return -1				# return exception as -1
 
+	def __get_currencies(self):
+		try:
+			currency = self.booking['passes'][0]['TotalFareCurrency']
+
+			return currency
+
+		except:
+			return 'Error'
 
 	def __get_rules(self):			# get text of rules for penalties
 		try:
@@ -117,6 +187,9 @@ class Parser:
 
 		return date
 
+	def calculate_all(self):
+		pass
+
 	def calculate(self):				# main function of this class, parses code of company and calculates charge
 		if self.totalFare != -1 and self.baseFare != -1 and self.rules != 'Error' and self.taxes != [['Error']] and self.companyCode != 'Error':
 			data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
@@ -139,7 +212,7 @@ class Parser:
 
 				comp = Aeroflot(data)
 
-			elif self.companyCode == 'PS':	# Uzbekistan`s code
+			elif self.companyCode == 'SU':	# Uzbekistan`s code
 				from uzbekistan import Uzbekistan
 
 				comp = Uzbekistan(data)
