@@ -17,12 +17,12 @@ class Aeroflot:
         self.cancelRulue = []
 
     def calculate(self):
-        print("Total fare is",self.totalFare)
-        print("Base fare is",self.baseFare)
-        print("Taxes: ",(self.totalFare-self.baseFare),"\nTypes:")
+        print("Total fare is",self.totalFare,self.currency)
+        print("Base fare is",self.baseFare,self.currency)
+        print("Taxes: ",(self.totalFare-self.baseFare),self.currency,"\nTypes:")
         ch = 0
         for tax in self.taxes:
-            print("   ", tax[0], "=",tax[1])
+            print("   ", tax[0], "=",tax[1],self.currency)
         print("Departure Date:",self.dates[1],"\n")
         rules = self.rules.split("\n")
 
@@ -58,6 +58,7 @@ class Aeroflot:
                 sum_refunded_taxes += int(tax[1])
 
         output = {
+            'total taxes': self.sumTaxes,
             'non_refundable taxes': self.non_ref_taxes,
             'penalty': penaltyStr+" or "+str(int(penaltyValue))+"KZT",
             'refunded_fare': self.baseFare - penaltyValue,
