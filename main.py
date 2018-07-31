@@ -1,5 +1,5 @@
 import json
-from parser import Parser
+from parsing import Parser
 
 def get_json_data(text):
 	try:
