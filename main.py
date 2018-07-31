@@ -5,7 +5,7 @@ def get_json_data(text):
 	try:
 		with open(text + '.json', 'r') as f:
 			data = json.load(f)
-
+			
 		return data
 
 	except:
@@ -31,9 +31,11 @@ def main():
 		write_data(data)
 
 	else:
-		print('Error': 'Error')
+		print({'Error': 'Error'})
 
 		write_data({'Error': 'Error'})
+
+
 
 if __name__ == '__main__':
 	main()
