@@ -28,7 +28,7 @@ class Aeroflot:
             if "REISSUE/REVALIDATION" in rule:
                 temp = rule.split()
                 penaltyStr = temp[2]+temp[1]
-                penaltyValue = self.__get_Exchange_Rates(temp[1], float(temp[2]))
+                penaltyValue = round(self.__get_Exchange_Rates(temp[1], float(temp[2])), 1)
                 break
 
         self.non_ref_taxes = self.__non_refundable_taxes()
