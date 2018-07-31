@@ -99,39 +99,38 @@ class Parser:
 			return [-1]				# exception in getting passes from booking
 
 	def __get_taxes(self):			# get taxes grouped by each person in array as arrays of arrays of its type and amount
-		valuess = []
+		values = []
 		
 		try:
 			bookings = json.loads(self.booking['js_ticket'])['passes']
 
 			for booking in bookings:
-				values = []
+				value = []
 
 				try:
 
 					taxes = booking['Taxes']
 
 					for tax in taxes:
-						value = []
+						data = {}
 
 						try:
+							data['Type'] = tax['CountryCode']
+							data['Amount'] = int(tax['Amount'])
 
-							value.append(tax['CountryCode'])
-							value.append(int(tax['Amount']))
-
-							values.append(value)
+							value.append(data)
 
 						except:
-							values.append(['Error', -1])	# exception in getting single tax from taxes
+							value.append(['Error', -1])	# exception in getting single tax from taxes
 
-					valuess.append(values)
+					values.append(value)
 
 				except:
-					valuess.append([['Error', -1]])		# exception in getting single taxes from booking
+					values.append([['Error', -1]])		# exception in getting single taxes from booking
 		
 			# print(valuess)
 
-			return valuess
+			return values
 
 		except:
 			return [[['Error', -1]]]		# exception in getting passes from booking
@@ -149,7 +148,7 @@ class Parser:
 						# print(taxes)
 
 						try:
-							base_fare -= int(taxes[1])
+							base_fare -= int(taxes['Amount'])
 
 						except:
 							base_fare = base_fare		# exception in getting single tax value

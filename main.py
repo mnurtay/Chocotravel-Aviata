@@ -35,7 +35,5 @@ def main():
 
 		write_data({'Error': 'Error'})
 
-
-
 if __name__ == '__main__':
 	main()

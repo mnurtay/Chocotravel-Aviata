@@ -91,11 +91,11 @@ class Scat:
 		ref = 0
 
 		for tax in self.taxes:
-			if tax[0] in self.non_ref:
-				non_ref += int(tax[1])
+			if tax['Type'] in self.non_ref:
+				non_ref += int(tax['Amount'])
 
 			else:
-				ref += int(tax[1])
+				ref += int(tax['Amount'])
 
 		return non_ref, ref
 
