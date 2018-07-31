@@ -4,150 +4,414 @@ import json
 class Parser:
 
 	def __init__(self, booking, fare_rules):
-		self.booking = json.loads(booking['js_ticket'])
-		self.fareRule = json.loads(fare_rules['tarif_xml'])
+		self.booking = booking
+		self.fare_rule = fare_rules
 
-		self.companyCode = self.__get_code()
-		self.totalFare = self.__get_total_fare()
+		self.company_codes = self.__get_codes()
+		self.total_fares = self.__get_total_fares()
 		self.taxes = self.__get_taxes()
-		self.baseFare = self.__get_base_fare()
+		self.base_fares = self.__get_base_fares()
+		self.currencies = self.__get_currencies()
+		self.dates = self.__get_dates()
+		self.full_names = self.__get_full_names()
 
 		self.rules = self.__get_rules()
 
-	def __get_code(self):			# get code of airline company
+		self.data = self.__get_data()
+
+	def __get_data(self):			# group all data by each person in one array
+		if self.__check_pair():
+			data = []
+
+			for i in range(len(self.company_codes)):
+				try:
+					dt = {
+						'totalFare': self.total_fares[i],
+						'baseFare': self.base_fares[i],
+						'taxes': self.taxes[i],
+						'dates': self.dates[i],
+						'company_codes': self.company_codes[i],
+						'currencies': self.currencies[i],
+						'rules': self.rules
+					}
+
+					data.append(dt)
+
+				except:
+					data.append('Error')	# exception in creating of dt dictionary
+
+			# print(data)
+
+			return data
+
+		else:
+			return ['Error']	# exception in checking pair
+
+	def __check_pair(self):		# check for valid pair of booking and fare_rule
+		return self.booking['cid'] == self.fare_rule['combination_id']
+
+	def __get_codes(self):			# get codes of airline companies in array
+		codes = []
+
 		try:
-			companyCode = self.booking['passes'][0]['Routes'][0]['OperatingAirlineCode']
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
-			# print(companyCode)
+			for booking in bookings:
+				try:
+					code = booking['Routes'][0]['OperatingAirlineCode']
 
-			return companyCode
+					# print(code)
+
+					codes.append(code)
+
+				except:
+					codes.append('Error')	# exception in getting single airline code
+
+			# print(codes)
+
+			return codes
 
 		except:
-			return 'Error'			# return exception as string 'Error'
+			return ['Error']			# exception in getting passes from booking
 
-	def __get_total_fare(self):		# get total fare of booking
+	def __get_total_fares(self):		# get total fares of bookings in array
+		total_fares = []
+
 		try:
-			totalFare = int(self.booking['passes'][0]['TotalFare'])
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
-			# print(totalFare)
+			for booking in bookings:
+				try:
+					total_fare = int(booking['TotalFare'])
 
-			return totalFare
+					# print(total_fare)
+
+					total_fares.append(total_fare)
+
+				except:
+					total_fares.append(-1)	# exception in getting single total fare
+
+			# print(total_fares)
+
+			return total_fares
 
 		except:
-			return -1				# return exception as -1
+			return [-1]				# exception in getting passes from booking
 
-	def __get_taxes(self):			# get taxes as array of arrays of its type and amount
+	def __get_taxes(self):			# get taxes grouped by each person in array as arrays of arrays of its type and amount
+		valuess = []
+		
 		try:
-			taxes = self.booking['passes'][0]['Taxes']
-			values = []
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
-			for tax in taxes:
-				value = []
+			for booking in bookings:
+				values = []
 
-				value.append(tax['CountryCode'])
-				value.append(tax['Amount'])
+				try:
 
-				values.append(value)
+					taxes = booking['Taxes']
 
-			# print(values)
+					for tax in taxes:
+						value = []
 
-			return values
+						try:
+
+							value.append(tax['CountryCode'])
+							value.append(tax['Amount'])
+
+							values.append(value)
+
+						except:
+							values.append(['Error', -1])	# exception in getting single tax from taxes
+
+					valuess.append(values)
+
+				except:
+					valuess.append([['Error', -1]])		# exception in getting single taxes from booking
+		
+			# print(valuess)
+
+			return valuess
 
 		except:
-			return [['Error']]		# return exception as [['Error']]
+			return [[['Error', -1]]]		# exception in getting passes from booking
 
-	def __get_base_fare(self):		# calculating base fare according to total fare and taxes
+	def __get_base_fares(self):		# calculating base fares arelying to total fares and taxes
+		base_fares = []
+
+		for i in range(len(self.total_fares)):
+			try:
+
+				if self.total_fares[i] != -1 and self.taxes[i] != [['Error', -1]]:
+					base_fare = self.total_fares[i]
+
+					for taxes in self.taxes[i]:
+						# print(taxes)
+
+						try:
+							base_fare -= int(taxes[1])
+
+						except:
+							base_fare = base_fare		# exception in getting single tax value
+							
+
+					# print(base_fare)
+
+					base_fares.append(base_fare)
+
+				else:
+					base_fares.append(-1)		# # exception in checking total fare and taxes
+
+			except:
+				base_fares.append(-1)		# exception in getting i-th element
+
+		return base_fares
+
+	def __get_currencies(self):
+		currencies = []
+
 		try:
-			if self.totalFare != -1:
-				baseFare = self.totalFare
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
-				for tax in self.taxes:
-					baseFare -= int(tax[1])
+			for booking in bookings:
+				try:
+					currency = booking['TotalFareCurrency']
 
-				# print(baseFare)
+					# print(currency)
 
-				return baseFare
+					currencies.append(currency)
 
-			else: return -1
+				except:
+					currencies.append('Error')		# exception in getting single currency
+
+			return currencies
 
 		except:
-			return -1				# return exception as -1
-
+			return ['Error']	# exception in getting passes from booking
 
 	def __get_rules(self):			# get text of rules for penalties
 		try:
-			rules = self.fareRule['rules'][0]
+			rules = json.loads(self.fare_rule['tarif_xml'])['rules'][0]
 			text = ''
 
 			for rule in rules:
 				if rule['rule_title'] == 'PENALTIES':
 					text += rule['rule_text']
 
-			text = text.replace('       ', '').replace('      ', '').replace('     ', '')
-			text = text.replace('    ', '').replace('   ', '').replace('  ', '')
-			text = text.replace(' <br>', '')
+			text = text.replace('        ', '').replace('       ', '').replace('      ', '')
+			text = text.replace('     ', '').replace('    ', '').replace('   ', '')
+			text = text.replace('  ', '').replace(' <br>', '')
 
 			# print(text)
 
 			return text
 
 		except:
-			return 'Error'			# return exception as string 'Error'
+			return 'Error'			# exception in getting tarif_xml from fare_rules
 
 	def __get_dates(self):			# get current and departure date
-		departureDate = self.booking['passes'][0]['Routes'][0]['DepartureDate']
-		currentDate = datetime.datetime.now().isoformat()
+		dates = []
 
-		# split string
-		departureDate = departureDate.split("T", 1)
-		currentDate = currentDate.split("T", 1)
-		currentDate[1] = currentDate[1].split(".", 1)[0]
+		try:
+			bookings = json.loads(self.booking['js_ticket'])['passes']
 
-		# castDate
-		departureDate = self.__cast_date(departureDate)
-		currentDate = self.__cast_date(currentDate)
+			for booking in bookings:
+				try:
 
-		return currentDate, departureDate
+					departureDate = booking['Routes'][0]['DepartureDate']
+					currentDate = datetime.datetime.now().isoformat()
 
-	def __cast_date(self, data):	# auxillary function for dates
-		date = data[0].split("-", 2)
-		time = data[1].split(":", 2)
-		date = datetime.datetime(int(date[0]), int(date[1]), int(date[2]), 
+					# split string
+					departureDate = departureDate.split("T", 1)
+					currentDate = currentDate.split("T", 1)
+					currentDate[1] = currentDate[1].split(".", 1)[0]
+
+					# castDate
+					departureDate = self.__cast_date(departureDate)
+					currentDate = self.__cast_date(currentDate)
+
+					dates.append([currentDate, departureDate])
+
+				except:
+					dates.append(['Error', 'Error'])	# exception in getting single date pair
+
+			return dates
+
+		except:
+			return [['Error', 'Error in booking passes']]	# exception in getting passes from booking
+
+	def __cast_date(self, date):	# auxillary function for dates
+		cast_date = date[0].split("-", 2)
+
+		time = date[1].split(":", 2)
+
+		cast_date = datetime.datetime(int(cast_date[0]), int(cast_date[1]), int(cast_date[2]), 
 			int(time[0]), int(time[1]), int(time[2]))
 
-		return date
+		return cast_date
 
-	def calculate(self):				# main function of this class, parses code of company and calculates charge
-		if self.totalFare != -1 and self.baseFare != -1 and self.rules != 'Error' and self.taxes != [['Error']] and self.companyCode != 'Error':
-			data = {'totalFare': self.totalFare, 'baseFare': self.baseFare, 'rules': self.rules, 	# necessary data
-			'taxes': self.taxes, 'dates': self.__get_dates()}
+	def __get_full_names(self):
+		full_names = []
+
+		try:
+			bookings = json.loads(self.booking['js_ticket'])['passes']
+
+			for booking in bookings:
+				try:
+					given_name = booking['GivenName']
+
+				except:
+					given_name = ''		# exception in getting single given name
+
+				try:
+					sur_name = booking['Surname']
+
+				except:
+					sur_name = ''		# exception in getting single  surname
+
+				if sur_name != '' and given_name != '':
+					full_name = given_name + ' ' + sur_name
+
+				elif sur_name != '':
+					full_name = sur_name
+
+				elif given_name != '':
+					full_name = given_name
+
+				else:
+					full_name = ''
+
+				full_names.append(full_name)
+
+			return full_names
+
+		except:
+			return ['Error']	# exception in getting passes from booking
+
+	def calculate_all(self):
+		result = []
+
+		for i in range(len(self.data)):
+			try:
+				# print(self.data[i])
+
+				dt = self.__calculate(self.data[i])
+
+				# print(dt)
+
+				data = {}
+
+				try:
+					data['full_name'] = self.full_names[i]
+
+				except:
+					data['full_name'] = ''			# exception in getting single full name
+
+				inner_data = {}
+
+				try:
+					inner_data['total_fare'] = self.total_fares[i]
+				except:
+					inner_data['total_fare'] = ''	# exception in getting single total fare
+
+				try:
+					inner_data['base_fare'] = self.base_fares[i]
+				except:
+					inner_data['base_fare'] = ''	# exception in getting single base fare
+
+				try:
+					inner_data['total_taxes'] = self.total_fares[i] - self.base_fares[i]
+				except:
+					inner_data['total_taxes'] = ''	# exception in getting single total taxes
+
+				try:
+					inner_data['taxes'] = self.taxes[i]
+				except:
+					inner_data['taxes'] = ''		# exception in getting single taxes
+
+				try:
+					inner_data['non_refundable taxes'] = dt['non_refundable taxes']
+				except:
+					inner_data['non_refundable taxes'] = ''		# exception in getting single nonrefundable taxes
+
+				try:
+					inner_data['penalty'] = dt['penalty']
+				except:
+					inner_data['penalty'] = ''		# exception in getting single penalty
+				
+				try:		
+					inner_data['refunded_fare'] = dt['refunded_fare']
+				except:
+					inner_data['refunded_fare'] = ''	# exception in getting single refunded fare
+
+				try:
+					inner_data['refunded_taxes'] = dt['refunded_taxes']
+				except:
+					inner_data['refunded_taxes'] = ''	# exception in getting single refunded taxes
+
+				try:
+					inner_data['refunded_total'] = dt['refunded_total']
+				except:
+					inner_data['refunded_total'] = ''	# exception in getting single total refund
+
+				try:
+					inner_data['operating_company'] = dt['name']
+				except:
+					inner_data['operating_company'] = ''	# exception in getting single operating company
+
+				try:
+					inner_data['currency'] = self.currencies[i]
+				except:
+					inner_data['currency'] = ''		# exception in getting single currency
+
+				data['data'] = inner_data
+
+				result.append(data)
+
+			except:
+				result.append({'Error': 'Error in self calculation'})	# exception in self calculate
+
+		return result
+
+	def __calculate(self, data):		# main function of this class, parses code of company and calculates charge
+		# print(data['totalFare'])
+		# print(data['baseFare'])
+		# print(data['rules'])
+		# print(data['taxes'])
+		# print(data['company_codes'])
+		# print(data['currencies'])
+		# print(data['dates'])
+
+
+
+		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != 'Error' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
 
 			comp = None
 
-			if self.companyCode == 'DV':	# Scat`s code
+			if data['company_codes'] == 'DV':	# Scat`s code
 				from scat import Scat
-				print("SCAT AirLine\n")
+				
 				comp = Scat(data)
 
-			elif self.companyCode == 'Z9':	# BekAir`s code
+			elif data['company_codes'] == 'Z9':	# BekAir`s code
 				from bekair import BekAir
 
 				comp = BekAir(data)
 
-			elif self.companyCode == 'SU':	# Aeroflot`s code
+			elif data['company_codes'] == 'SU':	# Aeroflot`s code
 				from aeroflot import Aeroflot
 
 				comp = Aeroflot(data)
 
-			elif self.companyCode == 'PS':	# Uzbekistan`s code
+			elif data['company_codes'] == 'SU':	# Uzbekistan`s code
 				from uzbekistan import Uzbekistan
 
 				comp = Uzbekistan(data)
 
 			try:
-				return 'Change amount is ' + str(comp.calculate())
+				return comp.calculate()
 
 			except:
-				return 'Error'
+				return {'Error': 'Error in class calculation'}	# exception in class calculate
 		else:
-			return 'Error'
+			return {'Error': 'Error in value check'}	# exception in value check

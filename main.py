@@ -1,29 +1,41 @@
 import json
 from parser import Parser
 
-def get_data(text):
+def get_json_data(text):
 	try:
-		with open(text + '.json') as f:
+		with open(text + '.json', 'r') as f:
 			data = json.load(f)
-
+			
 		return data
 
 	except:
 		return None
 
+def write_data(data):
+	with open('output.json', 'w') as f:
+		json.dump(data, f, ensure_ascii=False)
+		
+	print('Success')
+
 def main():
-	booking = get_data('booking')
-	fare_rules = get_data('fare_rules')
+	booking = get_json_data('booking')
+	fare_rules = get_json_data('fare_rules')
 
-	parser = Parser(booking, fare_rules)
+	if booking != None and fare_rules != None:
+		parser = Parser(booking, fare_rules)
 
-	msg = parser.calculate()
+		data = parser.calculate_all()
+
+		print(data)
 	
-	if 'Error' in msg:
-		print('Error')
+		write_data(data)
 
 	else:
-		print(msg)
+		print({'Error': 'Error'})
+
+		write_data({'Error': 'Error'})
+
+
 
 if __name__ == '__main__':
 	main()
