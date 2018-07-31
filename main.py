@@ -1,7 +1,7 @@
 import json
 from parser import Parser
 
-def get_data(text):
+def get_json_data(text):
 	try:
 		with open(text + '.json', 'r') as f:
 			data = json.load(f)
@@ -18,16 +18,22 @@ def write_data(data):
 	print('Success')
 
 def main():
-	booking = get_data('booking')
-	fare_rules = get_data('fare_rules')
+	booking = get_json_data('booking')
+	fare_rules = get_json_data('fare_rules')
 
-	parser = Parser(booking, fare_rules)
+	if booking != None and fare_rules != None:
+		parser = Parser(booking, fare_rules)
 
-	data = parser.calculate_all()
+		data = parser.calculate_all()
 
-	print(data)
+		print(data)
 	
-	write_data(data)
+		write_data(data)
+
+	else:
+		print('Error': 'Error')
+
+		write_data({'Error': 'Error'})
 
 if __name__ == '__main__':
 	main()

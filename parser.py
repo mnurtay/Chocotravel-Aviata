@@ -19,7 +19,7 @@ class Parser:
 
 		self.data = self.__get_data()
 
-	def __get_data(self):
+	def __get_data(self):			# group all data by each person in one array
 		if self.__check_pair():
 			data = []
 
@@ -38,19 +38,19 @@ class Parser:
 					data.append(dt)
 
 				except:
-					data.append('Error')
+					data.append('Error')	# exception in creating of dt dictionary
 
 			# print(data)
 
 			return data
 
 		else:
-			return ['Error']
+			return ['Error']	# exception in checking pair
 
-	def __check_pair(self):
+	def __check_pair(self):		# check for valid pair of booking and fare_rule
 		return self.booking['cid'] == self.fare_rule['combination_id']
 
-	def __get_codes(self):			# get code of airline company
+	def __get_codes(self):			# get codes of airline companies in array
 		codes = []
 
 		try:
@@ -65,16 +65,16 @@ class Parser:
 					codes.append(code)
 
 				except:
-					codes.append('Error')
+					codes.append('Error')	# exception in getting single airline code
 
 			# print(codes)
 
 			return codes
 
 		except:
-			return ['Error']			# return exception as string 'Error'
+			return ['Error']			# exception in getting passes from booking
 
-	def __get_total_fares(self):		# get total fare of booking
+	def __get_total_fares(self):		# get total fares of bookings in array
 		total_fares = []
 
 		try:
@@ -89,16 +89,16 @@ class Parser:
 					total_fares.append(total_fare)
 
 				except:
-					total_fares.append(-1)
+					total_fares.append(-1)	# exception in getting single total fare
 
 			# print(total_fares)
 
 			return total_fares
 
 		except:
-			return [-1]				# return exception as -1
+			return [-1]				# exception in getting passes from booking
 
-	def __get_taxes(self):			# get taxes as array of arrays of its type and amount
+	def __get_taxes(self):			# get taxes grouped by each person in array as arrays of arrays of its type and amount
 		valuess = []
 		
 		try:
@@ -122,21 +122,21 @@ class Parser:
 							values.append(value)
 
 						except:
-							values.append(['Error', -1])
+							values.append(['Error', -1])	# exception in getting single tax from taxes
 
 					valuess.append(values)
 
 				except:
-					valuess.append([['Error', -1]])
+					valuess.append([['Error', -1]])		# exception in getting single taxes from booking
 		
 			# print(valuess)
 
 			return valuess
 
 		except:
-			return [[['Error', -1]]]		# return exception as [[['Error']]]
+			return [[['Error', -1]]]		# exception in getting passes from booking
 
-	def __get_base_fares(self):		# calculating base fare according to total fare and taxes
+	def __get_base_fares(self):		# calculating base fares arelying to total fares and taxes
 		base_fares = []
 
 		for i in range(len(self.total_fares)):
@@ -152,7 +152,7 @@ class Parser:
 							base_fare -= int(taxes[1])
 
 						except:
-							base_fare = base_fare
+							base_fare = base_fare		# exception in getting single tax value
 							
 
 					# print(base_fare)
@@ -160,10 +160,10 @@ class Parser:
 					base_fares.append(base_fare)
 
 				else:
-					base_fares.append(-1)
+					base_fares.append(-1)		# # exception in checking total fare and taxes
 
 			except:
-				base_fares.append(-1)
+				base_fares.append(-1)		# exception in getting i-th element
 
 		return base_fares
 
@@ -182,12 +182,12 @@ class Parser:
 					currencies.append(currency)
 
 				except:
-					currencies.append('Error')
+					currencies.append('Error')		# exception in getting single currency
 
 			return currencies
 
 		except:
-			return ['Error']
+			return ['Error']	# exception in getting passes from booking
 
 	def __get_rules(self):			# get text of rules for penalties
 		try:
@@ -207,7 +207,7 @@ class Parser:
 			return text
 
 		except:
-			return 'Error'			# return exception as string 'Error'
+			return 'Error'			# exception in getting tarif_xml from fare_rules
 
 	def __get_dates(self):			# get current and departure date
 		dates = []
@@ -233,12 +233,12 @@ class Parser:
 					dates.append([currentDate, departureDate])
 
 				except:
-					dates.append(['Error', 'Error'])
+					dates.append(['Error', 'Error'])	# exception in getting single date pair
 
 			return dates
 
 		except:
-			return [['Error', 'Error']]
+			return [['Error', 'Error in booking passes']]	# exception in getting passes from booking
 
 	def __cast_date(self, date):	# auxillary function for dates
 		cast_date = date[0].split("-", 2)
@@ -261,13 +261,13 @@ class Parser:
 					given_name = booking['GivenName']
 
 				except:
-					given_name = ''
+					given_name = ''		# exception in getting single given name
 
 				try:
 					sur_name = booking['Surname']
 
 				except:
-					sur_name = ''
+					sur_name = ''		# exception in getting single  surname
 
 				if sur_name != '' and given_name != '':
 					full_name = given_name + ' ' + sur_name
@@ -286,7 +286,7 @@ class Parser:
 			return full_names
 
 		except:
-			return ['Error']
+			return ['Error']	# exception in getting passes from booking
 
 	def calculate_all(self):
 		result = []
@@ -305,78 +305,78 @@ class Parser:
 					data['full_name'] = self.full_names[i]
 
 				except:
-					data['full_name'] = ''
+					data['full_name'] = ''			# exception in getting single full name
 
 				inner_data = {}
 
 				try:
 					inner_data['total_fare'] = self.total_fares[i]
 				except:
-					inner_data['total_fare'] = ''
+					inner_data['total_fare'] = ''	# exception in getting single total fare
 
 				try:
 					inner_data['base_fare'] = self.base_fares[i]
 				except:
-					inner_data['base_fare'] = ''
+					inner_data['base_fare'] = ''	# exception in getting single base fare
 
 				try:
 					inner_data['total_taxes'] = self.total_fares[i] - self.base_fares[i]
 				except:
-					inner_data['total_taxes'] = ''
+					inner_data['total_taxes'] = ''	# exception in getting single total taxes
 
 				try:
 					inner_data['taxes'] = self.taxes[i]
 				except:
-					inner_data['taxes'] = ''
+					inner_data['taxes'] = ''		# exception in getting single taxes
 
 				try:
 					inner_data['non_refundable taxes'] = dt['non_refundable taxes']
 				except:
-					inner_data['non_refundable taxes'] = ''
+					inner_data['non_refundable taxes'] = ''		# exception in getting single nonrefundable taxes
 
 				try:
 					inner_data['penalty'] = dt['penalty']
 				except:
-					inner_data['penalty'] = ''			
+					inner_data['penalty'] = ''		# exception in getting single penalty
 				
 				try:		
 					inner_data['refunded_fare'] = dt['refunded_fare']
 				except:
-					inner_data['refunded_fare'] = ''
+					inner_data['refunded_fare'] = ''	# exception in getting single refunded fare
 
 				try:
 					inner_data['refunded_taxes'] = dt['refunded_taxes']
 				except:
-					inner_data['refunded_taxes'] = ''
+					inner_data['refunded_taxes'] = ''	# exception in getting single refunded taxes
 
 				try:
 					inner_data['refunded_total'] = dt['refunded_total']
 				except:
-					inner_data['refunded_total'] = ''
+					inner_data['refunded_total'] = ''	# exception in getting single total refund
 
 				try:
 					inner_data['operating_company'] = dt['name']
 				except:
-					inner_data['operating_company'] = ''
+					inner_data['operating_company'] = ''	# exception in getting single operating company
 
 				try:
 					inner_data['currency'] = self.currencies[i]
 				except:
-					inner_data['currency'] = ''
+					inner_data['currency'] = ''		# exception in getting single currency
 
 				data['data'] = inner_data
 
 				result.append(data)
 
 			except:
-				result.append({'Error': 'Errors'})
+				result.append({'Error': 'Error in self calculation'})	# exception in self calculate
 
 		return result
 
 	def __calculate(self, data):		# main function of this class, parses code of company and calculates charge
 		# print(data['totalFare'])
 		# print(data['baseFare'])
-		# # print(data['rules'])
+		# print(data['rules'])
 		# print(data['taxes'])
 		# print(data['company_codes'])
 		# print(data['currencies'])
@@ -412,6 +412,6 @@ class Parser:
 				return comp.calculate()
 
 			except:
-				return {'Error': 'Error'}
+				return {'Error': 'Error in class calculation'}	# exception in class calculate
 		else:
-			return {'Error': 'Error'}
+			return {'Error': 'Error in value check'}	# exception in value check
