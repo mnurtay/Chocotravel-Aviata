@@ -117,7 +117,7 @@ class Parser:
 						try:
 
 							value.append(tax['CountryCode'])
-							value.append(tax['Amount'])
+							value.append(int(tax['Amount']))
 
 							values.append(value)
 
