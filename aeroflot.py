@@ -22,7 +22,7 @@ class Aeroflot:
         penaltyValue = None        
         
         if not self.__check_ofNoShow() and not self.__get_status():
-            return 0
+            return None
         
         for rule in self.changeRules:
             if "REISSUE/REVALIDATION" in rule:
