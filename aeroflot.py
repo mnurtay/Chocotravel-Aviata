@@ -45,7 +45,7 @@ class Aeroflot:
         for rule in self.changeRules:
             if "REISSUE/REVALIDATION" in rule:
                 temp = rule.split()
-                penaltyStr = temp[2]+" "+temp[1]
+                penaltyStr = temp[2]+temp[1]
                 penaltyValue = self.__get_Exchange_Rates(temp[1], float(temp[2]))
                 break
 
@@ -53,20 +53,17 @@ class Aeroflot:
         refunded_taxes = []
         sum_refunded_taxes = 0
         for tax in self.taxes:
-            ch = 0
-            for non in self.non_ref_taxes:
-                if tax[0] != non[0]:
-                    ch = 1
-            if ch == 1:
+            if not tax[0] in self.non_ref_taxes:
                 refunded_taxes.append(tax)
                 sum_refunded_taxes += int(tax[1])
 
         output = {
             'non_refundable taxes': self.non_ref_taxes,
-            'penalty': penaltyStr+" "+str(penaltyValue)+" KZT",
+            'penalty': penaltyStr+" or "+str(int(penaltyValue))+"KZT",
             'refunded_fare': self.baseFare - penaltyValue,
             'refunded_taxes':  refunded_taxes,
             'refunded_total': sum_refunded_taxes,
+            'operating_company': "Aeroflot",
             'currency': self.currency
         }
 
