@@ -11,65 +11,61 @@ class Aeroflot:
         self.non_ref_taxes = None
         self.sumTaxes = self.totalFare - self.baseFare
         self.dates = data['dates']
-        #self.currency = data['currency']
-        self.currency = "KZT"
+        self.currency = data['currencies']
         self.changeRules = []
         self.cancelRulue = []
 
     def calculate(self):
-        print("Total fare is",self.totalFare,self.currency)
-        print("Base fare is",self.baseFare,self.currency)
-        print("Taxes: ",(self.totalFare-self.baseFare),self.currency,"\nTypes:")
-        ch = 0
-        for tax in self.taxes:
-            print("   ", tax[0], "=",tax[1],self.currency)
-        print("Departure Date:",self.dates[1],"\n")
-        rules = self.rules.split("\n")
-
+        self.__split_rules()
+        
         penaltyStr = None
-        penaltyValue = None
-
-        for rule in rules:
-            if "CHANGES" in rule:
-                ch = 1
-            elif "CANCELLATION" in rule:
-                ch = 2
-            if ch == 1:
-                self.changeRules.append(rule)
-            else:
-                self.cancelRulue.append(rule)
+        penaltyValue = None        
         
         if not self.__check_ofNoShow() and not self.__get_status():
-            return 0
-
+            return None
+        
         for rule in self.changeRules:
             if "REISSUE/REVALIDATION" in rule:
                 temp = rule.split()
                 penaltyStr = temp[2]+temp[1]
-                penaltyValue = self.__get_Exchange_Rates(temp[1], float(temp[2]))
+                penaltyValue = round(self.__get_Exchange_Rates(temp[1], float(temp[2])), 1)
                 break
 
         self.non_ref_taxes = self.__non_refundable_taxes()
-        refunded_taxes = []
-        sum_refunded_taxes = 0
+        refunded_taxes = 0
+        non_refunded_taxes = 0
         for tax in self.taxes:
-            if not tax[0] in self.non_ref_taxes:
-                refunded_taxes.append(tax)
-                sum_refunded_taxes += int(tax[1])
+            if not tax["Type"] in self.non_ref_taxes:
+                refunded_taxes += int(tax["Amount"])
+            else:
+                non_refunded_taxes += int(tax["Amount"])
 
         output = {
             'total taxes': self.sumTaxes,
-            'non_refundable taxes': self.non_ref_taxes,
+            'non_refundable taxes': non_refunded_taxes,
             'penalty': penaltyStr+" or "+str(int(penaltyValue))+"KZT",
             'refunded_fare': self.baseFare - penaltyValue,
             'refunded_taxes':  refunded_taxes,
-            'refunded_total': sum_refunded_taxes,
-            'operating_company': "Aeroflot",
+            'refunded_total': (self.baseFare-penaltyValue)+refunded_taxes,
+            'name': "Aeroflot",
             'currency': self.currency
         }
 
         return output
     
+    def __split_rules(self):
+        rules = self.rules.split("\n")
+        ch = 0
+        for rl in rules:
+            if "CHANGES" in rl:
+                ch = 1
+            elif "CANCELLATION" in rl:
+                ch = 2
+            if ch == 1:
+                self.changeRules.append(rl)
+            else:
+                self.cancelRulue.append(rl)
+            
     def __non_refundable_taxes(self):
         rules = self.rules.split("\n")
         non_ref = None

@@ -389,23 +389,23 @@ class Parser:
 
 			if data['company_codes'] == 'DV':	# Scat`s code
 				from scat import Scat
-				
 				comp = Scat(data)
 
 			elif data['company_codes'] == 'Z9':	# BekAir`s code
-				from bekair import BekAir
-
+				from BekAir import BekAir
 				comp = BekAir(data)
 
 			elif data['company_codes'] == 'SU':	# Aeroflot`s code
 				from aeroflot import Aeroflot
-
 				comp = Aeroflot(data)
 
 			elif data['company_codes'] == 'SU':	# Uzbekistan`s code
 				from uzbekistan import Uzbekistan
-
 				comp = Uzbekistan(data)
+			
+			elif data['company_codes'] == 'TK':	# Turkish`s code
+				from turkish import Turkish
+				comp = Turkish(data)
 
 			try:
 				return comp.calculate()
