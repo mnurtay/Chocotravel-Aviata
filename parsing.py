@@ -291,84 +291,80 @@ class Parser:
 		result = []
 
 		for i in range(len(self.data)):
+			# print(self.data[i])
+
+			dt = self.__calculate(self.data[i])
+	
+			# print(dt)
+
+			data = {}
+
 			try:
-				# print(self.data[i])
-
-				dt = self.__calculate(self.data[i])
-
-				# print(dt)
-
-				data = {}
-
-				try:
-					data['full_name'] = self.full_names[i]
-
-				except:
-					data['full_name'] = ''			# exception in getting single full name
-
-				inner_data = {}
-
-				try:
-					inner_data['total_fare'] = self.total_fares[i]
-				except:
-					inner_data['total_fare'] = ''	# exception in getting single total fare
-
-				try:
-					inner_data['base_fare'] = self.base_fares[i]
-				except:
-					inner_data['base_fare'] = ''	# exception in getting single base fare
-
-				try:
-					inner_data['total_taxes'] = self.total_fares[i] - self.base_fares[i]
-				except:
-					inner_data['total_taxes'] = ''	# exception in getting single total taxes
-
-				try:
-					inner_data['taxes'] = self.taxes[i]
-				except:
-					inner_data['taxes'] = ''		# exception in getting single taxes
-
-				try:
-					inner_data['non_refundable taxes'] = dt['non_refundable taxes']
-				except:
-					inner_data['non_refundable taxes'] = ''		# exception in getting single nonrefundable taxes
-
-				try:
-					inner_data['penalty'] = dt['penalty']
-				except:
-					inner_data['penalty'] = ''		# exception in getting single penalty
-				
-				try:		
-					inner_data['refunded_fare'] = dt['refunded_fare']
-				except:
-					inner_data['refunded_fare'] = ''	# exception in getting single refunded fare
-
-				try:
-					inner_data['refunded_taxes'] = dt['refunded_taxes']
-				except:
-					inner_data['refunded_taxes'] = ''	# exception in getting single refunded taxes
-
-				try:
-					inner_data['refunded_total'] = dt['refunded_total']
-				except:
-					inner_data['refunded_total'] = ''	# exception in getting single total refund
-
-				try:
-					inner_data['operating_company'] = dt['name']
-				except:
-					inner_data['operating_company'] = ''	# exception in getting single operating company
-
-				try:
-					inner_data['currency'] = self.currencies[i]
-				except:
-					inner_data['currency'] = ''		# exception in getting single currency
-
-				data['data'] = inner_data
-
-				result.append(data)
+				data['full_name'] = self.full_names[i]
 
 			except:
-				result.append({'Error': 'Error in self calculation'})	# exception in self calculate
+				data['full_name'] = ''			# exception in getting single full name
+
+			inner_data = {}
+
+			try:
+				inner_data['total_fare'] = self.total_fares[i]
+			except:
+				inner_data['total_fare'] = ''	# exception in getting single total fare
+
+			try:
+				inner_data['base_fare'] = self.base_fares[i]
+			except:
+				inner_data['base_fare'] = ''	# exception in getting single base fare
+
+			try:
+				inner_data['total_taxes'] = self.total_fares[i] - self.base_fares[i]
+			except:
+				inner_data['total_taxes'] = ''	# exception in getting single total taxes
+
+			try:
+				inner_data['taxes'] = self.taxes[i]
+			except:
+				inner_data['taxes'] = ''		# exception in getting single taxes
+
+			try:
+				inner_data['non_refundable taxes'] = dt['non_refundable taxes']
+			except:
+				inner_data['non_refundable taxes'] = ''		# exception in getting single nonrefundable taxes
+
+			try:
+				inner_data['penalty'] = dt['penalty']
+			except:
+				inner_data['penalty'] = ''		# exception in getting single penalty
+				
+			try:		
+				inner_data['refunded_fare'] = dt['refunded_fare']
+			except:
+				inner_data['refunded_fare'] = ''	# exception in getting single refunded fare
+
+			try:
+				inner_data['refunded_taxes'] = dt['refunded_taxes']
+			except:
+				inner_data['refunded_taxes'] = ''	# exception in getting single refunded taxes
+
+			try:
+				inner_data['refunded_total'] = dt['refunded_total']
+			except:
+				inner_data['refunded_total'] = ''	# exception in getting single total refund
+
+			try:
+				inner_data['operating_company'] = dt['name']
+			except:
+				inner_data['operating_company'] = ''	# exception in getting single operating company
+
+			try:
+				inner_data['currency'] = self.currencies[i]
+			except:
+				inner_data['currency'] = ''		# exception in getting single currency
+
+			data['data'] = inner_data
+
+			result.append(data)
 
 		return result
 
@@ -399,7 +395,7 @@ class Parser:
 				from aeroflot import Aeroflot
 				comp = Aeroflot(data)
 
-			elif data['company_codes'] == 'SU':	# Uzbekistan`s code
+			elif data['company_codes'] == 'HY':	# Uzbekistan`s code
 				from uzbekistan import Uzbekistan
 				comp = Uzbekistan(data)
 			
