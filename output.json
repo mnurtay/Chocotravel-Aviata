@@ -1,0 +1,77 @@
+[
+  {
+    "full_name": "BAKHYTKUL MUSSATAYEVA",
+    "data": {
+      "total_fare": 32556,
+      "base_fare": 27000,
+      "total_taxes": 5556,
+      "taxes": [
+        {
+          "Type": "YR",
+          "Amount": 4100
+        },
+        {
+          "Type": "UJ",
+          "Amount": 1456
+        }
+      ],
+      "non_refundable taxes": 4100,
+      "penalty": 6750.0,
+      "refunded_fare": 20250.0,
+      "refunded_taxes": 1456,
+      "refunded_total": 21706.0,
+      "operating_company": "SCAT Airlines",
+      "currency": "KZT"
+    }
+  },
+  {
+    "full_name": "ANDREW BUNENKO",
+    "data": {
+      "total_fare": 32556,
+      "base_fare": 27000,
+      "total_taxes": 5556,
+      "taxes": [
+        {
+          "Type": "YR",
+          "Amount": 4100
+        },
+        {
+          "Type": "UJ",
+          "Amount": 1456
+        }
+      ],
+      "non_refundable taxes": 4100,
+      "penalty": 6750.0,
+      "refunded_fare": 20250.0,
+      "refunded_taxes": 1456,
+      "refunded_total": 21706.0,
+      "operating_company": "SCAT Airlines",
+      "currency": "KZT"
+    }
+  },
+  {
+    "full_name": "ANNA KUDYMA",
+    "data": {
+      "total_fare": 32556,
+      "base_fare": 27000,
+      "total_taxes": 5556,
+      "taxes": [
+        {
+          "Type": "YR",
+          "Amount": 4100
+        },
+        {
+          "Type": "UJ",
+          "Amount": 1456
+        }
+      ],
+      "non_refundable taxes": 4100,
+      "penalty": 6750.0,
+      "refunded_fare": 20250.0,
+      "refunded_taxes": 1456,
+      "refunded_total": 21706.0,
+      "operating_company": "SCAT Airlines",
+      "currency": "KZT"
+    }
+  }
+]
