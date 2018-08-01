@@ -1,3 +1,6 @@
+import requests
+import bs4
+
 class Uzbekistan:
 
 	def __init__(self, data):
@@ -13,11 +16,14 @@ class Uzbekistan:
 
 		self.charge = ''
 		self.charge_cur = ''
+		self.percent = False
+		self.penalty = ''
 
 		print('Total fare is ' + str(self.totalFare))
 		print('Base fare is ' + str(self.baseFare))
 		print('Taxes are ' + str(self.taxes))
 		print('Departure date is ' + str(self.depDate))
+		print(self.currency)
 
 		self.dom = True
 
@@ -25,14 +31,39 @@ class Uzbekistan:
 
 		# print('Fare rules is ' + str(self.rules))
 
-		self.non_ref = ['YR']				# array of nonrefundable taxes` types
+		self.non_ref = []				# array of nonrefundable taxes` types
 
 	def calculate(self):
-		pass
-		
+		if self.__check_status():
+			
+			if self.charge != '' and self.charge_cur != '':
+				self.penalty = round(self.__get_Exchange_Rates(self.charge_cur, self.charge))
 
-	def __calc_coef(self):			# get coef of charge
-		pass
+			elif self.charge != '' and self.percent:
+				self.penalty = round(self.baseFare * self.percent / 100)
+
+			# print(self.penalty)
+
+			self.non_ref_tax, self.ref_tax = self.__calc_taxes()
+
+			self.total = self.totalFare - self.penalty - self.non_ref_tax
+
+			data = self.__get_data()
+
+			return data
+
+	def __get_data(self):
+		data = {}
+
+		data['non_refundable taxes'] = self.non_ref
+		data['penalty'] = self.penalty
+
+		data['refunded_fare'] = self.baseFare - self.penalty
+		data['refunded_taxes'] = self.ref_tax
+		data['refunded_total'] = self.total
+		data['name'] = self.name
+
+		return data
 
 	def __calc_taxes(self):			# get nonrefundable taxes
 		non_ref = 0
@@ -50,6 +81,17 @@ class Uzbekistan:
 	def __check_status(self):		# check status of flight
 		return self.now < self.depDate
 
+	def __get_Exchange_Rates(self, course, amount):
+		site = requests.get('https://prodengi.kz/currency/')
+		html = bs4.BeautifulSoup(site.text, "html.parser")
+		price = None
+		if course=="EUR" or course=="RUB" or course=="USD":
+			tenge = html.select('.content_list .'+course+' .price_buy')
+			# print(tenge)
+			price = tenge[0].getText()
+			price = float(price) * float(amount)
+		return price
+
 	def __set_values(self):						# set values for calculating change
 		ps = self.rules.split('\n\n')
 
@@ -60,20 +102,31 @@ class Uzbekistan:
 
 		for p in ps:
 			qwe = self.__split_all(p)
-		
-			# print(qwe)
 
-			if 'CANCELLATIONS' in qwe and 'REFUND' in qwe and 'AFTER' not in qwe:
-				for qw in qwe:
-					if self.__is_number(qw):
-						self.charge = qw
+			if self.dom:
+				if 'CANCELLATION' in qwe and 'REFUND' in qwe:
+					for qw in qwe:
+						if self.__is_number(qw):
+							self.charge = qw
 
-					elif self.__is_currency(qw):
-						self.charge_cur = qw
+						elif self.__is_percent(qw):
+							self.percent = True
 
-		print(self.charge)
-		print(self.charge_cur)
-		# print(ps)
+			else:
+				if 'CANCELLATIONS' in qwe and 'REFUND' in qwe and 'AFTER' not in qwe:
+					for qw in qwe:
+						if self.__is_number(qw):
+							self.charge = qw
+
+						elif self.__is_currency(qw):
+							self.charge_cur = qw
+
+		# if self.dom:
+		# 	if self.percent:
+		# 		print(self.charge + '%')
+
+		# else:
+		# 	print(self.charge + ' ' + self.charge_cur)
 
 	def __split_all(self, p):
 		qwe = []
@@ -90,6 +143,12 @@ class Uzbekistan:
 				qwe.append(word)
 
 		return qwe
+
+	def __is_percent(self, text):
+		if text == 'PERCENT' or text == 'PCT':
+			return True
+
+		return False
 
 	def __is_number(self, text):
 		try:

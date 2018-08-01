@@ -23,12 +23,12 @@
           "Amount": 4044
         }
       ],
-      "non_refundable taxes": "",
-      "penalty": "",
-      "refunded_fare": "",
-      "refunded_taxes": "",
-      "refunded_total": "",
-      "operating_company": "",
+      "non_refundable taxes": [],
+      "penalty": 14238,
+      "refunded_fare": 30722,
+      "refunded_taxes": 13769,
+      "refunded_total": 44491,
+      "operating_company": "Uzbekistan Airways",
       "currency": "KZT"
     }
   }

@@ -51,8 +51,6 @@ class Scat:
 
 				# print('Coeficient of charge is ' + str(coef))
 
-				# print(self.__calc_taxes())
-
 				self.non_ref, self.ref = self.__calc_taxes()
 
 				# print('Non refundable taxes are ' + str(self.non_ref))
