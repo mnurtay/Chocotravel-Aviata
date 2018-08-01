@@ -73,9 +73,9 @@ class Scat:
 
 				return data
 
-			return self.mode		# return error
+			return {'Error': 'Error'}		# return error
 
-		return self.mode			# return error
+		return {'Error': 'Error'}			# return error
 
 	def __calc_coef(self):			# get coef of charge
 		coef = 0

@@ -1,76 +1,34 @@
 [
   {
-    "full_name": "BAKHYTKUL MUSSATAYEVA",
+    "full_name": "MARIYA ASHIKHMINA",
     "data": {
-      "total_fare": 32556,
-      "base_fare": 27000,
-      "total_taxes": 5556,
+      "total_fare": 58729,
+      "base_fare": 44960,
+      "total_taxes": 13769,
       "taxes": [
         {
-          "Type": "YR",
-          "Amount": 4100
+          "Type": "CS",
+          "Amount": 817
         },
         {
           "Type": "UJ",
-          "Amount": 1456
-        }
-      ],
-      "non_refundable taxes": 4100,
-      "penalty": 6750.0,
-      "refunded_fare": 20250.0,
-      "refunded_taxes": 1456,
-      "refunded_total": 21706.0,
-      "operating_company": "SCAT Airlines",
-      "currency": "KZT"
-    }
-  },
-  {
-    "full_name": "ANDREW BUNENKO",
-    "data": {
-      "total_fare": 32556,
-      "base_fare": 27000,
-      "total_taxes": 5556,
-      "taxes": [
-        {
-          "Type": "YR",
-          "Amount": 4100
+          "Amount": 2841
         },
         {
-          "Type": "UJ",
-          "Amount": 1456
-        }
-      ],
-      "non_refundable taxes": 4100,
-      "penalty": 6750.0,
-      "refunded_fare": 20250.0,
-      "refunded_taxes": 1456,
-      "refunded_total": 21706.0,
-      "operating_company": "SCAT Airlines",
-      "currency": "KZT"
-    }
-  },
-  {
-    "full_name": "ANNA KUDYMA",
-    "data": {
-      "total_fare": 32556,
-      "base_fare": 27000,
-      "total_taxes": 5556,
-      "taxes": [
-        {
-          "Type": "YR",
-          "Amount": 4100
+          "Type": "UZ",
+          "Amount": 6067
         },
         {
-          "Type": "UJ",
-          "Amount": 1456
+          "Type": "FX",
+          "Amount": 4044
         }
       ],
-      "non_refundable taxes": 4100,
-      "penalty": 6750.0,
-      "refunded_fare": 20250.0,
-      "refunded_taxes": 1456,
-      "refunded_total": 21706.0,
-      "operating_company": "SCAT Airlines",
+      "non_refundable taxes": "",
+      "penalty": "",
+      "refunded_fare": "",
+      "refunded_taxes": "",
+      "refunded_total": "",
+      "operating_company": "",
       "currency": "KZT"
     }
   }
