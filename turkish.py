@@ -22,7 +22,7 @@ class Turkish:
         non_refunded_taxes = 0
         refunded_taxes = 0
         check = 0
-        for rule in rules:
+        for rule in rules:)
             if "REISSUE/REVALIDATION" in rule:
                 penalty.append(rule.split()[1])
                 penalty.append(float(rule.split()[2]))
