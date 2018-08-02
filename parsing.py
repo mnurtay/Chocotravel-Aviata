@@ -411,6 +411,10 @@ class Parser:
 				from turkish import Turkish
 				comp = Turkish(data)
 
+			elif data['company_codes'] == 'S7': # S7 Airlines`s code
+				from s7 import S7
+				comp = S7(data)
+
 			try:
 				return comp.calculate()
 

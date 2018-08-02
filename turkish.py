@@ -17,6 +17,7 @@ class Turkish:
     
     def calculate(self):      
         rules = self.rules.split("\n")
+        print(rules)
         cancellation = []
         penalty = []
         non_refunded_tax = 0
