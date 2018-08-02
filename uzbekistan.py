@@ -27,7 +27,7 @@ class Uzbekistan:
 
 		self.dom = True
 
-		self.__set_values()
+		# self.__set_values()
 		self.__set_values1()
 
 		# print('Fare rules is ' + str(self.rules))
@@ -123,7 +123,10 @@ class Uzbekistan:
 									self.percent = True
 							break
 
+					print(self.charge, '%')
+
 					break
+
 
 			else:
 				if 'CANCELLATIONS PERMITTED' in p and 'BEFORE DEPARTURE' in p and 'REFUND' in p:
@@ -153,20 +156,10 @@ class Uzbekistan:
 								if self.__is_number(qw):
 									self.charge = qwe[i+1]
 									break
+
+					print(self.charge, self.charge_cur)
+
 					break
-			if self.dom:
-				print(self.charge, '%')
-			else:
-				print(self.charge, self.charge_cur)
-
-
-				break
-
-		self.dom = False
-		self.charge = '50'
-
-		self.charge_cur = 'EUR'
-
 
 	def __set_values(self):						# set values for calculating change
 		ps = self.rules.split('\n\n')
