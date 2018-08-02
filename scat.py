@@ -51,8 +51,6 @@ class Scat:
 
 				# print('Coeficient of charge is ' + str(coef))
 
-				# print(self.__calc_taxes())
-
 				self.non_ref, self.ref = self.__calc_taxes()
 
 				# print('Non refundable taxes are ' + str(self.non_ref))
@@ -73,9 +71,9 @@ class Scat:
 
 				return data
 
-			return self.mode		# return error
+			return {'Error': 'Error'}		# return error
 
-		return self.mode			# return error
+		return {'Error': 'Error'}			# return error
 
 	def __calc_coef(self):			# get coef of charge
 		coef = 0
