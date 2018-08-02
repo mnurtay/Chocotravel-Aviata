@@ -404,7 +404,7 @@ class Parser:
 				comp = Turkish(data)
 
 			elif data['company_codes'] == 'S7': # S7 Airlines`s code
-				from s7 import S7_airlines
+				from s7 import S7
 				comp = S7_airlines(data)
 
 			try:
