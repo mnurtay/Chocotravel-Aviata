@@ -1,4 +1,5 @@
 import bs4
+import requests
 
 class S7:
     
@@ -14,69 +15,74 @@ class S7:
         self.currencies = data['currencies']
         self.name = 'S7 Airlines'
         
+        self.status = " "
         self.non_refundable_taxes = 0
         self.sum_fare = 0
+        self.non_ref = []
         self.check = 0
 
     def calculate(self):
-        
+        # print(self.check)
+
         if self.check == 0:
 
-            if self.__get_status():
-
-                words = self.rules.split("\n")
-                print(words)
+            words = self.rules.split("\n")
+                #print(words)
                 
-                arr_canc = []
-                arr_penalty = []
-                non_refundable_taxes = 0
-                sum_fare = 0
-                refunded_taxes = 0
-                check = 0
-                ch = 0
-                penalty = 0
+            arr_canc = []
+            arr_penalty = []
+            non_refundable_taxes = 0
+            sum_fare = 0
+            refunded_taxes = 0
+            check = 0
+            #ch = 0
+            #penalty = 0
 
-                for rule in rules:
-                    print(rule)
-                    if "CHANGES" in rule:
-                        check = 1
-                    elif "CANCELLATIONS" in rule:
-                        check = 2
-                    if check == 2:
-                        arr_canc.append(rule)
+            for rule in words:
+                #print(rule)
+                if "CHANGES" in rule:
+                    check = 1
+                elif "CANCELLATIONS" in rule:
+                    check = 2
+
+                if check == 2:
+                    arr_canc.append(rule)
         
-                for rule in arr_canc:
-                    if "BEFORE DEPARTURE" in rule:
-                        ch = 1
+            for rule in arr_canc:
+                print(rule)
+                if self.status == "CANCEL" or self.status == "NO-SHOW" or self.status == "REFUND":
+                    if not self.now < self.depDate:
+                        return None
 
-                    elif "AFTER DEPARTURE" in rule:
-                        ch = 2
+                if check == 2:
+                    if "CANCEL/NO-SHOW/REFUND" in rule:
+                        if "NON_REFUNDABLE" in rule:
+                            break
 
-                    if ch == 1 and "CHARGE RUB" in rule:
-                        pen = rule.split()[2]
-                        arr_penalty.append(pen)
-                        break
+            # print(self.non_refundable_taxes)
+            # print(penalty)
+            # print(self.sum_fare)
+            # print(self.totalTaxes)
+            # print(self.total)
+            # print(self.name)
+            # print(self.currencies)
 
-                penalty = round(self.__get_Exchange_Rates(arr_penalty), 1)
+            output = {}
 
-                self.sum_fare = self.baseFare - penalty
-                self.total = self.totalFare - penalty - self.non_refundable_taxes
+            output['non_refundable_taxes'] = self.non_refundable_taxes
+            output['penalty'] = str(self.baseFare)
+            output['refunded_fare'] = self.sum_fare
+            output['refunded_taxes'] = self.totalTaxes
+            output['refunded_total'] = self.totalFare
+            output['name'] = self.name
+            output['currency']= self.currencies
 
-                output = {}
-                output['non_refundable_taxes'] = self.non_refundable_taxes
-                output['penalty'] = penalty
-                output['refunded_fare'] = self.sum_fare
-                output['refunded_taxes'] = self.totalTaxes
-                output['refunded_total'] =self.total
-                output['name'] = self.name
-                output['currency']: self.currencies
+            #print(output)
 
-                return output
-            return 'Error'
+            return output
+
         return 'Error'
 
-    def __get_status(self):
-        return self.now < self.depDate
 
     def __get_Exchange_Rates(self, data):
         site = requests.get('https://prodengi.kz/currency/')

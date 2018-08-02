@@ -25,6 +25,13 @@ class Parser:
 
 			for i in range(len(self.company_codes)):
 				try:
+					# print(self.total_fares[i])
+					# print(self.base_fares[i])
+					# print(self.taxes[i])
+					# print(self.dates[i])
+					# print(self.company_codes[i])
+					# print(self.currencies[i])
+
 					dt = {
 						'totalFare': self.total_fares[i],
 						'baseFare': self.base_fares[i],
@@ -34,6 +41,7 @@ class Parser:
 						'currencies': self.currencies[i],
 						'rules': self.rules
 					}
+					# print(str(dt))
 
 					data.append(dt)
 
@@ -288,6 +296,8 @@ class Parser:
 			return ['Error']	# exception in getting passes from booking
 
 	def calculate_all(self):
+		# print(self.data)
+
 		result = []
 
 		for i in range(len(self.data)):
@@ -377,11 +387,9 @@ class Parser:
 		# print(data['currencies'])
 		# print(data['dates'])
 
-
-
 		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != 'Error' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
 
-			comp = None
+			comp =	 None
 
 			if data['company_codes'] == 'DV':	# Scat`s code
 				from scat import Scat
