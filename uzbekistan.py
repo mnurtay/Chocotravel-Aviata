@@ -28,6 +28,7 @@ class Uzbekistan:
 		self.dom = True
 
 		self.__set_values()
+		self.__set_values1()
 
 		# print('Fare rules is ' + str(self.rules))
 
@@ -91,6 +92,81 @@ class Uzbekistan:
 			price = tenge[0].getText()
 			price = float(price) * float(amount)
 		return price
+	
+	def __set_values1(self):
+		ps = self.rules.split('\n\n')
+
+		if 'BETWEEN' in ps[0] and 'UZBEKISTAN' in ps[0]:
+			self.dom = False
+	
+		for p in ps:
+			
+			p = p.replace('\n', ' ').replace('  ', ' ')
+			# print(p)
+			# print()
+			if self.dom:
+				if 'REFUND' in p and 'CANCELLATION' in p and 'CHANGES' not in p:
+					qwe = p.split('.')
+
+					for qw in qwe:
+						if 'REFUND' in qw and 'CHARGE' in qw:
+							for i in range(len(qw)):
+								if self.__is_number(qw[i]):
+									self.charge = qw[i]
+
+									if self.__is_percent(qw[i+1]):
+										self.percent = True
+
+										break
+
+								if self.__is_percent(qw[i]):
+									self.percent = True
+							break
+
+					break
+
+			else:
+				if 'CANCELLATIONS PERMITTED' in p and 'BEFORE DEPARTURE' in p and 'REFUND' in p:
+					# print(p)
+					# print(len(p))
+					
+					s = list(p)
+
+					for i in range(1, len(s) - 1):
+						if s[i] == '.' and not self.__is_number(s[i-1]) and not self.__is_number(s[i+1]):
+							s[i] = ''
+
+					p = ''.join(s)
+
+					qwe = p.split(' ')
+
+					i = qwe.index('CHARGE')
+
+					if self.__is_currency(qwe[i+1]):
+						self.charge_cur = qwe[i+1]
+
+						if self.__is_number(qwe[i+2]):
+							self.charge = qwe[i+2]
+
+						else:
+							for qw in qwe:
+								if self.__is_number(qw):
+									self.charge = qwe[i+1]
+									break
+					break
+			if self.dom:
+				print(self.charge, '%')
+			else:
+				print(self.charge, self.charge_cur)
+
+
+				break
+
+		self.dom = False
+		self.charge = '50'
+
+		self.charge_cur = 'EUR'
+
 
 	def __set_values(self):						# set values for calculating change
 		ps = self.rules.split('\n\n')
