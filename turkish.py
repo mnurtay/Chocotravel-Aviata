@@ -13,8 +13,9 @@ class Turkish:
         self.currencies = data["currencies"]
         self.rules = data["rules"]
         self.ticketStatus = "OK"
+        self.check = None
     
-    def calculate(self):            
+    def calculate(self):      
         rules = self.rules.split("\n")
         cancellation = []
         penalty = []
@@ -22,6 +23,7 @@ class Turkish:
         non_refunded_taxes = []
         refunded_taxes = 0
         check = 0
+        
         for rule in rules:
             if "CHANGES" in rule:
                 check = 1
@@ -36,16 +38,15 @@ class Turkish:
                 if self.ticketStatus == "NO-SHOW":
                     if not self.dates[0] < self.dates[1]:
                         return None
-            if "SURCHARGE" in rule or "TAX" in rule:
-                for tax in self.taxes:
-                    if tax["Type"] in rule:
-                        non_refunded_taxes.append(tax)
             if "BEFORE DEPARTURE" in rule:
                 check = 1
             elif "AFTER DEPARTURE" in rule:
                 check = 2
             if check == 1:
                 if "CANCEL/REFUND" in rule:
+                    if "NON-REFUNDABLE" in rule:
+                        self.check = False
+                        break
                     for r in rule.split():
                         if r=="USD" or r=="EUR":
                             penalty.append(r)
@@ -53,24 +54,41 @@ class Turkish:
                             penalty.append(float(r))
                         except:
                             pass
-        non_refunded_tax = self.__non_refundable_taxes(non_refunded_taxes)
-
-        non_ref_fare = round(self.__get_Exchange_Rates(penalty), 1)
-
+            if "SURCHARGE" in rule or "TAX" in rule:
+                for tax in self.taxes:
+                    if tax["Type"] in rule:
+                        non_refunded_taxes.append(tax)
+        non_refunded_tax = self.totalTaxes
+        if len(non_refunded_taxes) != 0:
+            non_refunded_tax = self.__non_refundable_taxes(non_refunded_taxes)
+        
+        non_ref_fare = 0
+        if self.check:
+            non_ref_fare = round(self.__get_Exchange_Rates(penalty), 1)
+        else:
+            non_ref_fare = self.baseFare
+        
         if non_refunded_taxes == 0:
             refunded_taxes = self.totalTaxes
         else:
             refunded_taxes = self.totalTaxes - non_refunded_tax
-        
+
         output = {
-            'non_refundable taxes': non_refunded_tax,
-            'penalty': str(penalty[1])+" "+penalty[0]+" or "+str(non_ref_fare)+" "+"KZT",
-            'refunded_fare': self.baseFare - non_ref_fare,
-            'refunded_taxes':  refunded_taxes,
-            'refunded_total': (self.baseFare-non_ref_fare)+refunded_taxes,
             'name': "Turkish AirLine",
-            'currency': self.currencies
+            'currency': self.currencies,
+            'refunded_fare': self.baseFare - non_ref_fare,
         }
+        
+        if self.check:
+            output['penalty'] = str(penalty[1])+" "+penalty[0]+" or "+str(non_ref_fare)+" "+"KZT"
+            output['non_refundable taxes'] = self.totalTaxes
+            output['refunded_taxes'] = refunded_taxes
+            output['refunded_total'] = (self.baseFare-non_ref_fare)+refunded_taxes
+        else:
+            output['penalty'] = str(self.baseFare)
+            output['non_refundable taxes'] = non_refunded_tax
+            output['refunded_taxes'] = 0
+            output['refunded_total'] = 0
         return output
 
     def __non_refundable_taxes(self, taxes):
