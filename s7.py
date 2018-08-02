@@ -1,4 +1,3 @@
-import requests
 import bs4
 
 class S7:

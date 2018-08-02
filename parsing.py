@@ -405,7 +405,7 @@ class Parser:
 
 			elif data['company_codes'] == 'S7': # S7 Airlines`s code
 				from s7 import S7
-				comp = S7_airlines(data)
+				comp = S7(data)
 
 			try:
 				return comp.calculate()
