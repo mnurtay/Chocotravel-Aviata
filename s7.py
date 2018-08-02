@@ -1,4 +1,5 @@
 import bs4
+import requests
 
 class S7:
     
@@ -19,13 +20,14 @@ class S7:
         self.check = 0
 
     def calculate(self):
-        
+        # print(self.check)
+
         if self.check == 0:
 
             if self.__get_status():
 
                 words = self.rules.split("\n")
-                print(words)
+                # print(words)
                 
                 arr_canc = []
                 arr_penalty = []
@@ -36,8 +38,8 @@ class S7:
                 ch = 0
                 penalty = 0
 
-                for rule in rules:
-                    print(rule)
+                for rule in self.rules:
+                    # print(rule)
                     if "CHANGES" in rule:
                         check = 1
                     elif "CANCELLATIONS" in rule:
@@ -56,6 +58,8 @@ class S7:
                         pen = rule.split()[2]
                         arr_penalty.append(pen)
                         break
+                        
+                print(arr_penalty)
 
                 penalty = round(self.__get_Exchange_Rates(arr_penalty), 1)
 
@@ -63,16 +67,29 @@ class S7:
                 self.total = self.totalFare - penalty - self.non_refundable_taxes
 
                 output = {}
+
+                print(self.non_refundable_taxes)
+                print(penalty)
+                print(self.sum_fare)
+                print(self.totalTaxes)
+                print(self.total)
+                print(self.name)
+                print(self.currencies)
+
                 output['non_refundable_taxes'] = self.non_refundable_taxes
                 output['penalty'] = penalty
                 output['refunded_fare'] = self.sum_fare
                 output['refunded_taxes'] = self.totalTaxes
                 output['refunded_total'] =self.total
                 output['name'] = self.name
-                output['currency']: self.currencies
+                output['currency']= self.currencies
+
+                print(output)
 
                 return output
+
             return 'Error'
+
         return 'Error'
 
     def __get_status(self):
