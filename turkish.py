@@ -15,8 +15,7 @@ class Turkish:
         self.ticketStatus = "OK"
         self.check = None
     
-    def calculate(self):      
-        rules = self.rules.split("\n")
+    def calculate(self):
         cancellation = []
         penalty = []
         non_refunded_tax = 0
@@ -24,7 +23,7 @@ class Turkish:
         refunded_taxes = 0
         check = 0
         
-        for rule in rules:
+        for rule in self.rules.split("\n"):
             if "CHANGES" in rule:
                 check = 1
             elif "CANCELLATIONS" in rule:
@@ -67,27 +66,20 @@ class Turkish:
             non_ref_fare = round(self.__get_Exchange_Rates(penalty), 1)
         else:
             non_ref_fare = self.baseFare
-        
-        if non_refunded_taxes == 0:
-            refunded_taxes = self.totalTaxes
-        else:
-            refunded_taxes = self.totalTaxes - non_refunded_tax
 
         output = {
             'name': "Turkish AirLine",
             'currency': self.currencies,
             'refunded_fare': self.baseFare - non_ref_fare,
+            'refunded_taxes': self.totalTaxes - non_refunded_tax,
+            'non_refundable taxes': non_refunded_tax
         }
         
         if self.check:
             output['penalty'] = str(penalty[1])+" "+penalty[0]+" or "+str(non_ref_fare)+" "+"KZT"
-            output['non_refundable taxes'] = self.totalTaxes
-            output['refunded_taxes'] = refunded_taxes
             output['refunded_total'] = (self.baseFare-non_ref_fare)+refunded_taxes
         else:
-            output['penalty'] = str(self.baseFare)
-            output['non_refundable taxes'] = non_refunded_tax
-            output['refunded_taxes'] = 0
+            output['penalty'] = self.baseFare
             output['refunded_total'] = 0
         return output
 
