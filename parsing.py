@@ -35,14 +35,12 @@ class Parser:
 
 				cities.append(pair)
 
-			print(cities)
+			# print(cities)
 
 			return cities
 
 		except:
 			return [['Error', 'Error']]
-
-
 
 	def __get_data(self):			# group all data by each person in one array
 		if self.__check_pair():
