@@ -19,6 +19,31 @@ class Parser:
 
 		self.data = self.__get_data()
 
+		self.cities = self.__get_cities()
+
+	def __get_cities(self):
+		cities = []
+
+		try:
+			fares = json.loads(self.fare_rule['tarif_xml'])['fares']
+
+			for fare in fares:
+				pair = {}
+
+				pair['city_depart'] = fare['city_depart']
+				pair['city_arrive'] = fare['city_arrive']
+
+				cities.append(pair)
+
+			print(cities)
+
+			return cities
+
+		except:
+			return [['Error', 'Error']]
+
+
+
 	def __get_data(self):			# group all data by each person in one array
 		if self.__check_pair():
 			data = []
@@ -315,6 +340,18 @@ class Parser:
 			except:
 				data['full_name'] = ''			# exception in getting single full name
 
+			try:
+				data['departure_date'] = str(self.dates[i][1])
+
+			except:
+				data['departure_date'] = ''
+
+			try:
+				data['cities'] = self.cities
+
+			except:
+				data['cities'] = ''
+
 			inner_data = {}
 
 			try:
@@ -396,7 +433,7 @@ class Parser:
 				comp = Scat(data)
 
 			elif data['company_codes'] == 'Z9':	# BekAir`s code
-				from BekAir import BekAir
+				from bekair import BekAir
 				comp = BekAir(data)
 
 			elif data['company_codes'] == 'SU':	# Aeroflot`s code
