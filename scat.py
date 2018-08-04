@@ -1,4 +1,5 @@
 import datetime
+from validator import Validator
 
 class Scat:
 
@@ -25,8 +26,7 @@ class Scat:
 
 		# print('Fare rules is ' + str(self.rules))
 		
-		# self.__set_values()					# setting main values
-		self.__set_values1()
+		self.__set_values()					# setting main values
 
 		# print('Special values are ' + str(self.minutes) + ', ' + str(self.first) + ', ' + str(self.second))
 
@@ -123,7 +123,9 @@ class Scat:
 
 		return self.now < self.depDate
 
-	def __set_values1(self):
+	def __set_values(self):
+		v = Validator()
+
 		ps = self.rules.split('\n\n')
 
 		for p in ps:
@@ -143,7 +145,7 @@ class Scat:
 
 						# print(q[i+1])
 
-						if not self.__is_number(q[i+1]) and 'MINUTES' in q[i+1]:
+						if not v.is_number(q[i+1]) and 'MINUTES' in q[i+1]:
 							q[i+1] = q[i+1].replace('MINUTES', '')
 
 						self.minutes = int(q[i+1])
@@ -152,12 +154,12 @@ class Scat:
 
 						# print(q[i+1])
 
-						if not self.__is_number(q[i+1]) and 'PERCENT' in q[i+1]:
+						if not v.is_number(q[i+1]) and 'PERCENT' in q[i+1]:
 							q[i+1] = q[i+1].replace('PERCENT', '')
 
 						self.first = int(q[i+1])
 
-						# print(self.minutes, self.first)
+						print(self.minutes, self.first)
 
 					elif 'LESS THAN' in qw and 'BEFORE' in qw and 'CHARGE' in qw:
 						# print(qw)
@@ -167,7 +169,7 @@ class Scat:
 
 						# print(q[i+1])
 
-						if not self.__is_number(q[i+1]) and 'MINUTES' in q[i+1]:
+						if not v.is_number(q[i+1]) and 'MINUTES' in q[i+1]:
 							q[i+1] = q[i+1].replace('MINUTES', '')
 
 						self.minutes = int(q[i+1])
@@ -176,50 +178,9 @@ class Scat:
 
 						# print(q[i+1])
 
-						if not self.__is_number(q[i+1]) and 'PERCENT' in q[i+1]:
+						if not v.is_number(q[i+1]) and 'PERCENT' in q[i+1]:
 							q[i+1] = q[i+1].replace('PERCENT', '')
 
 						self.second = int(q[i+1])
 
-						# print(self.minutes, self.first) 
-
-
-	def __is_number(self, text):
-		try:
-			a = float(text)
-			# print(a)
-			return True
-
-		except:
-			return False
-
-	def __set_values(self):						# set values for calculating change
-		lines = self.rules.split('\n')
-
-		# print(lines)
-
-		try:
-			first_word = lines[2].split('.')[2].split(' ')[0]		# get first_word of fare_rule_text
-		except:
-			first_word = ''
-
-		if first_word == 'PERMITTED':					# 'Flexible' tarif`s text begins with 'PERMITTED'
-			self.minutes = 0
-			self.first = 0
-			self.second = 0
-
-		elif first_word == 'CHANGES':					# other tarif`s text begins with 'CHANGES'
-			try:										# try to define minutes
-				self.minutes = int(lines[3].split(' ')[2])
-			except:
-				self.minutes = -1
-
-			try:										# try to define first_charge
-				self.first = int(lines[4].split(' ')[4])
-			except:
-				self.first = -1
-
-			try:										# try to define second_charge
-				self.second = int(lines[9].split(' ')[2])
-			except:
-				self.second = -1
+						print(self.minutes, self.second)
