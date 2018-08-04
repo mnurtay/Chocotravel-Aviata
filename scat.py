@@ -1,4 +1,5 @@
 import datetime
+
 from validator import Validator
 
 class Scat:
@@ -6,8 +7,8 @@ class Scat:
 	def __init__(self, data):
 		self.name = 'SCAT Airlines'
 
-		self.totalFare = int(data['totalFare'])		# total fare ok booking
-		self.baseFare = int(data['baseFare'])		# base fare of booking
+		self.totalFare = float(data['totalFare'])	# total fare ok booking
+		self.baseFare = float(data['baseFare'])		# base fare of booking
 		self.rules = data['rules']					# text of fare rules
 		self.taxes = data['taxes']					# array of pairs type of taxe and its amount
 		self.now = data['dates'][0]					# current date
@@ -18,17 +19,7 @@ class Scat:
 		self.first = -1						# first mode change
 		self.second = -1					# second mode change
 
-		# print('Total fare is ' + str(self.totalFare))
-		# print('Base fare is ' + str(self.baseFare))
-		# print('Taxes are ' + str(self.taxes))
-		# print('Departure date is ' + str(self.depDate))
-
-
-		# print('Fare rules is ' + str(self.rules))
-		
-		self.__set_values()					# setting main values
-
-		# print('Special values are ' + str(self.minutes) + ', ' + str(self.first) + ', ' + str(self.second))
+		self.__parse_data()					# parsing rules for data
 
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
@@ -38,9 +29,9 @@ class Scat:
 		# print(self.first)
 		# print(self.second)
 
-		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
+		if self.__check_status():						# check status
 		
-			if self.__check_status():										# check status
+			if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
 
 				coef = self.__calc_coef()
 
@@ -82,21 +73,23 @@ class Scat:
 		coef = 0
 
 		if self.mode == 'before/before':
-			return int(self.first) / 100
+			coef = float(self.first) / 100
 
 		elif self.mode == 'before/after':
-			return int(self.second) / 100
+			coef = float(self.second) / 100
 
-	def __calc_taxes(self):			# get nonrefundable taxes
+		return coef
+
+	def __calc_taxes(self):			# get nonrefundable and refundable taxes` sum
 		non_ref = 0
 		ref = 0
 
 		for tax in self.taxes:
 			if tax['Type'] in self.non_ref:
-				non_ref += int(tax['Amount'])
+				non_ref += float(tax['Amount'])
 
 			else:
-				ref += int(tax['Amount'])
+				ref += float(tax['Amount'])
 
 		return non_ref, ref
 
@@ -123,64 +116,67 @@ class Scat:
 
 		return self.now < self.depDate
 
-	def __set_values(self):
+	def __parse_data(self):
 		v = Validator()
 
-		ps = self.rules.split('\n\n')
+		paragraphs = self.rules.split('\n\n')
 
-		for p in ps:
-			p = p.replace('\n', ' ').replace('  ', ' ')
+		for paragraph in paragraphs:
+			paragraph = paragraph.replace('\n', ' ').replace('  ', ' ')
 
-			# print(p)
+			# print(paragraph)
 			# print()
 
-			if 'CANCELLATION' in p and 'PERMITTED' in p and 'BEFORE DEPARTURE NOTE' in p:
-				qwe = p.split('.')
+			if 'CANCELLATION' in paragraph and 'PERMITTED' in paragraph and 'BEFORE DEPARTURE NOTE' in paragraph:
+				sentences = paragraph.split('.')
 
-				for qw in qwe:
-					if 'MORE THAN' in qw and 'BEFORE' in qw and 'CHARGE' in qw:
-						q = qw.split(' ')
+				for sentence in sentences:
+					if 'MORE THAN' in sentence and 'BEFORE' in sentence and 'CHARGE' in sentence:
+						# print(sentence)
 
-						i = q.index('THAN')
+						words = sentence.split(' ')
 
-						# print(q[i+1])
+						i = words.index('THAN')
 
-						if not v.is_number(q[i+1]) and 'MINUTES' in q[i+1]:
-							q[i+1] = q[i+1].replace('MINUTES', '')
+						# print(words[i+1])
 
-						self.minutes = int(q[i+1])
+						if not v.is_number(words[i+1]) and 'MINUTES' in words[i+1]:
+							words[i+1] = words[i+1].replace('MINUTES', '')
 
-						i = q.index('CHARGE')
+						self.minutes = int(words[i+1])
 
-						# print(q[i+1])
+						i = words.index('CHARGE')
 
-						if not v.is_number(q[i+1]) and 'PERCENT' in q[i+1]:
-							q[i+1] = q[i+1].replace('PERCENT', '')
+						# print(words[i+1])
 
-						self.first = int(q[i+1])
+						if not v.is_number(words[i+1]) and 'PERCENT' in words[i+1]:
+							words[i+1] = words[i+1].replace('PERCENT', '')
 
-						print(self.minutes, self.first)
+						self.first = float(words[i+1])
 
-					elif 'LESS THAN' in qw and 'BEFORE' in qw and 'CHARGE' in qw:
-						# print(qw)
-						q = qw.split(' ')
+						# print(self.minutes, self.first)
 
-						i = q.index('THAN')
+					elif 'LESS THAN' in sentence and 'BEFORE' in sentence and 'CHARGE' in sentence:
+						# print(sentence)
 
-						# print(q[i+1])
+						words = sentence.split(' ')
 
-						if not v.is_number(q[i+1]) and 'MINUTES' in q[i+1]:
-							q[i+1] = q[i+1].replace('MINUTES', '')
+						i = words.index('THAN')
 
-						self.minutes = int(q[i+1])
+						# print(words[i+1])
 
-						i = q.index('CHARGE')
+						if not v.is_number(words[i+1]) and 'MINUTES' in words[i+1]:
+							words[i+1] = words[i+1].replace('MINUTES', '')
 
-						# print(q[i+1])
+						self.minutes = int(words[i+1])
 
-						if not v.is_number(q[i+1]) and 'PERCENT' in q[i+1]:
-							q[i+1] = q[i+1].replace('PERCENT', '')
+						i = words.index('CHARGE')
 
-						self.second = int(q[i+1])
+						# print(words[i+1])
 
-						print(self.minutes, self.second)
+						if not v.is_number(words[i+1]) and 'PERCENT' in words[i+1]:
+							words[i+1] = words[i+1].replace('PERCENT', '')
+
+						self.second = float(words[i+1])
+
+						# print(self.minutes, self.second)

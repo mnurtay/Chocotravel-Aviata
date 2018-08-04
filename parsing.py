@@ -47,30 +47,54 @@ class Parser:
 			data = []
 
 			for i in range(len(self.company_codes)):
+				
+				# print(self.total_fares[i])
+				# print(self.base_fares[i])
+				# print(self.taxes[i])
+				# print(self.dates[i])
+				# print(self.company_codes[i])
+				# print(self.currencies[i])
+				dt = {}
+
 				try:
-					# print(self.total_fares[i])
-					# print(self.base_fares[i])
-					# print(self.taxes[i])
-					# print(self.dates[i])
-					# print(self.company_codes[i])
-					# print(self.currencies[i])
-
-					dt = {
-						'totalFare': self.total_fares[i],
-						'baseFare': self.base_fares[i],
-						'taxes': self.taxes[i],
-						'dates': self.dates[i],
-						'company_codes': self.company_codes[i],
-						'currencies': self.currencies[i],
-						'rules': self.rules
-					}
-					# print(str(dt))
-
-					data.append(dt)
-
+					dt['totalFare'] = self.total_fares[i]
 				except:
-					data.append('Error')	# exception in creating of dt dictionary
+					dt['totalFare'] = ''
 
+				try:
+					dt['baseFare'] = self.base_fares[i]
+				except:
+					dt['baseFare'] = ''
+
+				try:
+					dt['taxes'] = self.taxes[i]
+				except:
+					dt['taxes'] = []
+
+				try:
+					dt['dates'] = self.dates[i]
+				except:
+					dt['dates'] = ''
+
+				try:
+					dt['company_codes'] = self.company_codes[i]
+				except:
+					dt['company_codes'] = ''
+
+				try:
+					dt['currencies'] = self.currencies[i]
+				except:
+					dt['currencies'] = ''
+
+				try:
+					dt['rules'] = self.rules
+				except:
+					dt['rules'] = ''
+
+				# print(str(dt))
+
+				data.append(dt)
+				
 			# print(data)
 
 			return data
