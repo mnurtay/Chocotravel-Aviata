@@ -64,6 +64,7 @@ class BekAir():
 		#print(words)
 		ch = 0
 		for rule in words:
+			#print(rule)
 			if "CHANGES" in rule:
 			 	ch = 1
 			elif "CANCELLATIONS" in rule:

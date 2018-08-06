@@ -27,7 +27,7 @@ class S7:
         if self.check == 0:
 
             words = self.rules.split("\n")
-                #print(words)
+            #print(words)
                 
             arr_canc = []
             arr_penalty = []
@@ -49,7 +49,7 @@ class S7:
                     arr_canc.append(rule)
         
             for rule in arr_canc:
-                print(rule)
+                #print(rule)
                 if self.status == "CANCEL" or self.status == "NO-SHOW" or self.status == "REFUND":
                     if not self.now < self.depDate:
                         return None
@@ -59,7 +59,7 @@ class S7:
                         if "NON_REFUNDABLE" in rule:
                             break
 
-            # print(self.non_refundable_taxes)
+            #print(self.non_refundable_taxes)
             # print(penalty)
             # print(self.sum_fare)
             # print(self.totalTaxes)
@@ -69,11 +69,11 @@ class S7:
 
             output = {}
 
-            output['non_refundable_taxes'] = self.non_refundable_taxes
+            output['non_refundable taxes'] = self.totalTaxes
             output['penalty'] = str(self.baseFare)
             output['refunded_fare'] = self.sum_fare
-            output['refunded_taxes'] = self.totalTaxes
-            output['refunded_total'] = self.totalFare
+            output['refunded_taxes'] = 0
+            output['refunded_total'] = self.sum_fare + refunded_taxes
             output['name'] = self.name
             output['currency']= self.currencies
 
