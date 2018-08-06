@@ -25,7 +25,8 @@ class Scat:
 
 		# print('Fare rules is ' + str(self.rules))
 		
-		self.__set_values()					# setting main values
+		# self.__set_values()					# setting main values
+		self.__set_values1()
 
 		# print('Special values are ' + str(self.minutes) + ', ' + str(self.first) + ', ' + str(self.second))
 
@@ -36,22 +37,16 @@ class Scat:
 		# print(self.minutes)
 		# print(self.first)
 		# print(self.second)
+
 		if self.minutes != -1 and self.first != -1 and self.second != -1:	# check for values
 		
 			if self.__check_status():										# check status
-
-				# print('Total fare is ' + str(self.totalFare))
-				# print('Base fare is ' + str(self.baseFare))
-				# print('Taxes are ' + str(self.taxes))
-				# print('Departure date is ' + str(self.depDate))
 
 				coef = self.__calc_coef()
 
 				self.penalty = coef * self.baseFare
 
 				# print('Coeficient of charge is ' + str(coef))
-
-				# print(self.__calc_taxes())
 
 				self.non_ref, self.ref = self.__calc_taxes()
 
@@ -60,22 +55,28 @@ class Scat:
 
 				self.total = self.totalFare - self.penalty - self.non_ref	# total returned sum
 
-				data = {}
-				data['non_refundable taxes'] = self.non_ref
-				data['penalty'] = self.penalty
-
-				data['refunded_fare'] = self.baseFare - self.penalty
-				data['refunded_taxes'] = self.ref
-				data['refunded_total'] = self.total
-				data['name'] = self.name
+				data = self.__get_data()
 
 				# print(data)
 
 				return data
 
-			return self.mode		# return error
+			return {'Error': 'Error'}		# return error
 
-		return self.mode			# return error
+		return {'Error': 'Error'}			# return error
+	
+	def __get_data(self):
+		data = {}
+
+		data['non_refundable taxes'] = self.non_ref
+		data['penalty'] = self.penalty
+
+		data['refunded_fare'] = self.baseFare - self.penalty
+		data['refunded_taxes'] = self.ref
+		data['refunded_total'] = self.total
+		data['name'] = self.name
+
+		return data
 
 	def __calc_coef(self):			# get coef of charge
 		coef = 0
@@ -121,6 +122,76 @@ class Scat:
 		# print(self.now < self.depDate)
 
 		return self.now < self.depDate
+
+	def __set_values1(self):
+		ps = self.rules.split('\n\n')
+
+		for p in ps:
+			p = p.replace('\n', ' ').replace('  ', ' ')
+
+			# print(p)
+			# print()
+
+			if 'CANCELLATION' in p and 'PERMITTED' in p and 'BEFORE DEPARTURE NOTE' in p:
+				qwe = p.split('.')
+
+				for qw in qwe:
+					if 'MORE THAN' in qw and 'BEFORE' in qw and 'CHARGE' in qw:
+						q = qw.split(' ')
+
+						i = q.index('THAN')
+
+						# print(q[i+1])
+
+						if not self.__is_number(q[i+1]) and 'MINUTES' in q[i+1]:
+							q[i+1] = q[i+1].replace('MINUTES', '')
+
+						self.minutes = int(q[i+1])
+
+						i = q.index('CHARGE')
+
+						# print(q[i+1])
+
+						if not self.__is_number(q[i+1]) and 'PERCENT' in q[i+1]:
+							q[i+1] = q[i+1].replace('PERCENT', '')
+
+						self.first = int(q[i+1])
+
+						# print(self.minutes, self.first)
+
+					elif 'LESS THAN' in qw and 'BEFORE' in qw and 'CHARGE' in qw:
+						# print(qw)
+						q = qw.split(' ')
+
+						i = q.index('THAN')
+
+						# print(q[i+1])
+
+						if not self.__is_number(q[i+1]) and 'MINUTES' in q[i+1]:
+							q[i+1] = q[i+1].replace('MINUTES', '')
+
+						self.minutes = int(q[i+1])
+
+						i = q.index('CHARGE')
+
+						# print(q[i+1])
+
+						if not self.__is_number(q[i+1]) and 'PERCENT' in q[i+1]:
+							q[i+1] = q[i+1].replace('PERCENT', '')
+
+						self.second = int(q[i+1])
+
+						# print(self.minutes, self.first) 
+
+
+	def __is_number(self, text):
+		try:
+			a = float(text)
+			# print(a)
+			return True
+
+		except:
+			return False
 
 	def __set_values(self):						# set values for calculating change
 		lines = self.rules.split('\n')
