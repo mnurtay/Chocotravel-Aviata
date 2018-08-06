@@ -13,7 +13,7 @@ class Turkish:
         self.currencies = data["currencies"]
         self.rules = data["rules"]
         self.ticketStatus = "OK"
-        self.check = None
+        self.check = True
     
     def calculate(self):
         cancellation = []
@@ -53,10 +53,12 @@ class Turkish:
                             penalty.append(float(r))
                         except:
                             pass
-            if "SURCHARGE" in rule or "TAX" in rule:
-                for tax in self.taxes:
-                    if tax["Type"] in rule:
-                        non_refunded_taxes.append(tax)
+        if self.check:
+            for rule in cancellation:
+                if "SURCHARGE" in rule or "TAX" in rule:
+                    for tax in self.taxes:
+                        if tax["Type"] in rule:
+                            non_refunded_taxes.append(tax)
         non_refunded_tax = self.totalTaxes
         if len(non_refunded_taxes) != 0:
             non_refunded_tax = self.__non_refundable_taxes(non_refunded_taxes)
