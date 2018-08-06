@@ -49,10 +49,10 @@ class Aeroflot:
             'refunded_fare': self.baseFare - int(penalty[0])
         }
         if check:
-            output['penalty'] = str(penalty[1])+" "+penalty[0]+" or "+str(non_ref_fare)+" "+"KZT"
+            output['penalty'] = penalty[0]
             output['refunded_total'] = (self.baseFare-non_ref_fare)+refunded_taxes
         else:
-            output['penalty'] = str(self.baseFare)  
+            output['penalty'] = self.baseFare
             output['refunded_total'] = 0
 
         return output
