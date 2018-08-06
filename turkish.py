@@ -65,7 +65,9 @@ class Turkish:
         
         non_ref_fare = 0
         if self.check:
-            non_ref_fare = round(self.__get_Exchange_Rates(penalty), 1)
+            from converter import Converter
+            conv = Converter()
+            non_ref_fare = conv.calc(penalty[0], penalty[1], self.currencies)
         else:
             non_ref_fare = self.baseFare
 
@@ -90,12 +92,3 @@ class Turkish:
         for tax in taxes:
             amount += tax["Amount"]
         return amount
-
-    def __get_Exchange_Rates(self, data):
-        site = requests.get('https://prodengi.kz/currency/')
-        html = bs4.BeautifulSoup(site.text, "html.parser")
-        if data[0]=="EUR" or data[0]=="RUB" or data[0]=="USD":
-            tenge = html.select('.content_list .'+data[0]+' .price_buy')
-            out = tenge[0].getText()
-            out = float(out) * float(data[1])
-        return out

@@ -25,7 +25,9 @@ class Aeroflot:
                     break
                 temp = rule.split()
                 penalty[1] = temp[2]+temp[1]
-                penalty[0] = round(self.__get_Exchange_Rates(temp[1], float(temp[2])), 1)
+                from converter import Converter
+                conv = Converter()
+                penalty[0] = conv.calc(temp[1], float(temp[2]), self.currency)
                 break
         
         non_refunded_taxes = self.totalFare-self.baseFare
@@ -50,7 +52,7 @@ class Aeroflot:
             output['penalty'] = str(penalty[1])+" "+penalty[0]+" or "+str(non_ref_fare)+" "+"KZT"
             output['refunded_total'] = (self.baseFare-non_ref_fare)+refunded_taxes
         else:
-            output['penalty'] = str(self.baseFare)+" "+"KZT"  
+            output['penalty'] = str(self.baseFare)  
             output['refunded_total'] = 0
 
         return output
@@ -73,13 +75,3 @@ class Aeroflot:
                 non_ref = rule.split()[6].split("/")
                 break
         return non_ref
-
-    def __get_Exchange_Rates(self, course, amount):
-        site = requests.get('https://prodengi.kz/currency/')
-        html = bs4.BeautifulSoup(site.text, "html.parser")
-        price = None
-        if course=="EUR" or course=="RUB" or course=="USD":
-            tenge = html.select('.content_list .'+course+' .price_buy')
-            price = tenge[0].getText()
-            price = float(price) * float(amount)
-        return price
