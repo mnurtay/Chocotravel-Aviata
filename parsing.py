@@ -396,7 +396,7 @@ class Parser:
 				comp = Scat(data)
 
 			elif data['company_codes'] == 'Z9':	# BekAir`s code
-				from BekAir import BekAir
+				from bekair import BekAir
 				comp = BekAir(data)
 
 			elif data['company_codes'] == 'SU':	# Aeroflot`s code

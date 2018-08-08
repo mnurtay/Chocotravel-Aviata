@@ -20,24 +20,15 @@ class S7:
         self.sum_fare = 0
         self.non_ref = []
         self.check = 0
+        self.bool = None
 
     def calculate(self):
-        # print(self.check)
-<<<<<<< HEAD
-=======
-
-        if self.check == 0:
->>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
+        #print(self.check)
 
         if self.check == 0:
 
-<<<<<<< HEAD
             words = self.rules.split("\n")
             #print(words)
-=======
-                words = self.rules.split("\n")
-                # print(words)
->>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
                 
             arr_canc = []
             arr_penalty = []
@@ -48,7 +39,6 @@ class S7:
             #ch = 0
             #penalty = 0
 
-<<<<<<< HEAD
             for rule in words:
                 #print(rule)
                 if "CHANGES" in rule:
@@ -58,17 +48,8 @@ class S7:
 
                 if check == 2:
                     arr_canc.append(rule)
-=======
-                for rule in self.rules:
-                    # print(rule)
-                    if "CHANGES" in rule:
-                        check = 1
-                    elif "CANCELLATIONS" in rule:
-                        check = 2
-                    if check == 2:
-                        arr_canc.append(rule)
->>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
-        
+
+                
             for rule in arr_canc:
                 #print(rule)
                 if self.status == "CANCEL" or self.status == "NO-SHOW" or self.status == "REFUND":
@@ -78,7 +59,20 @@ class S7:
                 if check == 2:
                     if "CANCEL/NO-SHOW/REFUND" in rule:
                         if "NON_REFUNDABLE" in rule:
+                            self.bool = False
                             break
+
+                    elif "CHARGE EUR" or "CHARGE RUB" or "CHARGE USD" in rule:
+                        for i in rule.split():
+                            if i == "EUR" or i == "RUB" or i == "USD":
+                                arr_penalty.append(i)
+
+            non_ref = 0
+
+            if self.bool:
+                non_ref = round(self.__get_Exchange_Rates(arr_penalty), 1)
+            else:
+                non_ref = self.baseFare
 
             #print(self.non_refundable_taxes)
             # print(penalty)
@@ -88,58 +82,29 @@ class S7:
             # print(self.name)
             # print(self.currencies)
 
-<<<<<<< HEAD
             output = {}
-=======
-                    if ch == 1 and "CHARGE RUB" in rule:
-                        pen = rule.split()[2]
-                        arr_penalty.append(pen)
-                        break
-                        
-                print(arr_penalty)
->>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
 
-            output['non_refundable taxes'] = self.totalTaxes
-            output['penalty'] = str(self.baseFare)
-            output['refunded_fare'] = self.sum_fare
-            output['refunded_taxes'] = 0
-            output['refunded_total'] = self.sum_fare + refunded_taxes
-            output['name'] = self.name
-            output['currency']= self.currencies
-
-            #print(output)
-
-<<<<<<< HEAD
-            return output
-
-=======
-                output = {}
-
-                print(self.non_refundable_taxes)
-                print(penalty)
-                print(self.sum_fare)
-                print(self.totalTaxes)
-                print(self.total)
-                print(self.name)
-                print(self.currencies)
-
-                output['non_refundable_taxes'] = self.non_refundable_taxes
-                output['penalty'] = penalty
-                output['refunded_fare'] = self.sum_fare
-                output['refunded_taxes'] = self.totalTaxes
-                output['refunded_total'] =self.total
+            if self.bool:
+                output['non_refundable taxes'] = self.totalTaxes
+                output['penalty'] = str(non_ref)
+                output['refunded_fare'] = self.baseFare - non_ref
+                output['refunded_taxes'] = 0
+                output['refunded_total'] = (self.baseFare-non_ref_fare) + refunded_taxes
                 output['name'] = self.name
                 output['currency']= self.currencies
+            else:
+                output['non_refundable taxes'] = self.totalTaxes
+                output['penalty'] = str(self.baseFare)
+                output['refunded_fare'] = self.baseFare - non_ref
+                output['refunded_taxes'] = 0
+                output['refunded_total'] = 0
+                output['name'] = self.name
+                output['currency']= self.currencies
+            #print(output)
 
-                print(output)
+            return output
 
-                return output
-
-            return 'Error'
-
->>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
         return 'Error'
-
 
     def __get_Exchange_Rates(self, data):
         site = requests.get('https://prodengi.kz/currency/')
