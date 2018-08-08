@@ -27,7 +27,7 @@ def main():
 
 		data = parser.calculate_all()
 
-		# print(data)
+		print(data)
 	
 		write_data(data)
 

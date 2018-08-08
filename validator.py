@@ -1,13 +1,9 @@
 # class fov validating numbers, percent signs and currencies
 
-from converter import Converter
-
 class Validator:
 	
 	def __init__(self):
-		self.c = Converter()
-
-		self.currencies = self.c.currencies()
+		self.currencies = ['USD', 'EUR', 'KZT', 'RUB']
 
 		self.percents = ['PERCENT', 'PCT', '%', 'PERCENTS']
 

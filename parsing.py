@@ -100,7 +100,7 @@ class Parser:
 			return data
 
 		else:
-			return ['Error']	# exception in checking pair
+			return {'Error': 'Pairs match'}	# exception in checking pair
 
 	def __check_pair(self):		# check for valid pair of booking and fare_rule
 		return self.booking['cid'] == self.fare_rule['combination_id']
@@ -349,6 +349,9 @@ class Parser:
 
 		for i in range(len(self.data)):
 			# print(self.data[i])
+
+			if self.data[i] == {'Error': 'Pairs match'}:
+				continue
 
 			dt = self.__calculate(self.data[i])
 	

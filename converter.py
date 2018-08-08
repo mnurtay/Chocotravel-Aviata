@@ -1,6 +1,7 @@
 # class for currency exchange based on http://bankir.ru/kurs/valuta/
 
 import requests
+
 from bs4 import BeautifulSoup
 
 class Converter:
@@ -39,7 +40,11 @@ class Converter:
 		return currencies
 
 	def __get_html(self, url):
+		print(url)
+
 		resp = requests.get(url)
+		
+		print(url)
 
 		return resp.text
 

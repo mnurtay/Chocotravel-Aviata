@@ -52,9 +52,9 @@ class Scat:
 
 				return data
 
-			return {'Error': 'Error'}		# return error
+			return {'Error': 'Fare rules'}		# return error
 
-		return {'Error': 'Error'}			# return error
+		return {'Error': 'Date'}			# return error
 	
 	def __get_data(self):
 		data = {}
