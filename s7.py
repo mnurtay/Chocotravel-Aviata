@@ -42,7 +42,7 @@ class S7:
             for rule in words:
                 #print(rule)
                 if "CHANGES" in rule:
-                    check = 1
+                    check = 1 
                 elif "CANCELLATIONS" in rule:
                     check = 2
 
