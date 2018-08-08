@@ -16,7 +16,8 @@ class Aeroflot:
         self.__split_rules()
         penalty = []
         check = None  
-        
+        non_ref_fare = None
+
         for rule in self.cancelRule:
             if "CANCEL/NO-SHOW/" in rule:
                 if "IS NON-REFUNDABLE" in rule:
@@ -36,7 +37,7 @@ class Aeroflot:
             non_ref_taxes = self.__non_refundable_taxes()
             non_refunded_taxes = 0
             for tax in self.taxes:
-                if not tax["Type"] in self.non_ref_taxes:
+                if not tax["Type"] in non_ref_taxes:
                     refunded_taxes += int(tax["Amount"])
                 else:
                     non_refunded_taxes += int(tax["Amount"])
@@ -75,3 +76,4 @@ class Aeroflot:
                 non_ref = rule.split()[6].split("/")
                 break
         return non_ref
+ 
