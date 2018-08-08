@@ -100,7 +100,6 @@ class S7:
                 output['refunded_total'] = 0
                 output['name'] = self.name
                 output['currency']= self.currencies
-            #print(output)
 
             return output
 
