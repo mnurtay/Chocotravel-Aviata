@@ -1,1 +1,30 @@
-[{"full_name": "DINARA BAISSERKINA", "departure_date": "2018-08-11 16:45:00", "cities": [{"city_depart": "TSE", "city_arrive": "TAS"}], "data": {"total_fare": 40290, "base_fare": 38130, "total_taxes": 2160, "taxes": [{"Type": "UJ", "Amount": 2160}], "non_refundable taxes": "", "penalty": "", "refunded_fare": "", "refunded_taxes": "", "refunded_total": "", "operating_company": "", "currency": "KZT"}}]
+[
+  {
+    "full_name": "DINARA BAISSERKINA",
+    "departure_date": "2018-08-11 16:45:00",
+    "cities": [
+      {
+        "city_depart": "TSE",
+        "city_arrive": "TAS"
+      }
+    ],
+    "data": {
+      "total_fare": 40290,
+      "base_fare": 38130,
+      "total_taxes": 2160,
+      "taxes": [
+        {
+          "Type": "UJ",
+          "Amount": 2160
+        }
+      ],
+      "non_refundable taxes": "",
+      "penalty": "",
+      "refunded_fare": "",
+      "refunded_taxes": "",
+      "refunded_total": "",
+      "operating_company": "",
+      "currency": "KZT"
+    }
+  }
+]
