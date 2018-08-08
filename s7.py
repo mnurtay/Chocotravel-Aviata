@@ -22,12 +22,31 @@ class S7:
         self.check = 0
 
     def calculate(self):
+<<<<<<< HEAD
         #print(self.check)
+=======
+        # print(self.check)
+<<<<<<< HEAD
+=======
+>>>>>>> 9c861cbd0efa87eccf8af20e809e3fb1ba080f21
 
         if self.check == 0:
+>>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
 
+<<<<<<< HEAD
             words = self.rules.split("\n")
             #print(words)
+=======
+        if self.check == 0:
+
+<<<<<<< HEAD
+            words = self.rules.split("\n")
+            #print(words)
+=======
+                words = self.rules.split("\n")
+                # print(words)
+>>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
+>>>>>>> 9c861cbd0efa87eccf8af20e809e3fb1ba080f21
                 
             arr_canc = []
             arr_penalty = []
@@ -38,6 +57,10 @@ class S7:
             #ch = 0
             #penalty = 0
 
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> 9c861cbd0efa87eccf8af20e809e3fb1ba080f21
             for rule in words:
                 #print(rule)
                 if "CHANGES" in rule:
@@ -47,6 +70,7 @@ class S7:
 
                 if check == 2:
                     arr_canc.append(rule)
+<<<<<<< HEAD
 
                 
             for rule in arr_canc:
@@ -70,6 +94,49 @@ class S7:
 
             output = {}
         
+=======
+=======
+                for rule in self.rules:
+                    # print(rule)
+                    if "CHANGES" in rule:
+                        check = 1
+                    elif "CANCELLATIONS" in rule:
+                        check = 2
+                    if check == 2:
+                        arr_canc.append(rule)
+>>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
+        
+            for rule in arr_canc:
+                #print(rule)
+                if self.status == "CANCEL" or self.status == "NO-SHOW" or self.status == "REFUND":
+                    if not self.now < self.depDate:
+                        return None
+
+                if check == 2:
+                    if "CANCEL/NO-SHOW/REFUND" in rule:
+                        if "NON_REFUNDABLE" in rule:
+                            break
+
+            #print(self.non_refundable_taxes)
+            # print(penalty)
+            # print(self.sum_fare)
+            # print(self.totalTaxes)
+            # print(self.total)
+            # print(self.name)
+            # print(self.currencies)
+
+<<<<<<< HEAD
+            output = {}
+=======
+                    if ch == 1 and "CHARGE RUB" in rule:
+                        pen = rule.split()[2]
+                        arr_penalty.append(pen)
+                        break
+                        
+                print(arr_penalty)
+>>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
+
+>>>>>>> 9c861cbd0efa87eccf8af20e809e3fb1ba080f21
             output['non_refundable taxes'] = self.totalTaxes
             output['penalty'] = str(self.baseFare)
             output['refunded_fare'] = self.sum_fare
@@ -77,11 +144,41 @@ class S7:
             output['refunded_total'] = self.sum_fare + refunded_taxes
             output['name'] = self.name
             output['currency']= self.currencies
+<<<<<<< HEAD
+=======
+
+            #print(output)
+
+<<<<<<< HEAD
+            return output
+
+=======
+                output = {}
+
+                print(self.non_refundable_taxes)
+                print(penalty)
+                print(self.sum_fare)
+                print(self.totalTaxes)
+                print(self.total)
+                print(self.name)
+                print(self.currencies)
+
+                output['non_refundable_taxes'] = self.non_refundable_taxes
+                output['penalty'] = penalty
+                output['refunded_fare'] = self.sum_fare
+                output['refunded_taxes'] = self.totalTaxes
+                output['refunded_total'] =self.total
+                output['name'] = self.name
+                output['currency']= self.currencies
+
+                print(output)
+>>>>>>> 9c861cbd0efa87eccf8af20e809e3fb1ba080f21
 
             #print(output)
 
             return output
 
+>>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
         return 'Error'
 
 

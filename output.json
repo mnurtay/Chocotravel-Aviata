@@ -1,1 +1,13 @@
+<<<<<<< HEAD
 [{"full_name": "TAE HYON KWON", "data": {"total_fare": 31223, "base_fare": 21520, "total_taxes": 9703, "taxes": [{"Type": "YQ", "Amount": 3138}, {"Type": "YR", "Amount": 5650}, {"Type": "UJ", "Amount": 915}], "non_refundable taxes": 0, "penalty": 3500, "refunded_fare": 18020, "refunded_taxes": 9703, "refunded_total": 27723, "operating_company": "Bek Air", "currency": "KZT"}}, {"full_name": "HUNKI PARK", "data": {"total_fare": 31223, "base_fare": 21520, "total_taxes": 9703, "taxes": [{"Type": "YQ", "Amount": 3138}, {"Type": "YR", "Amount": 5650}, {"Type": "UJ", "Amount": 915}], "non_refundable taxes": 0, "penalty": 3500, "refunded_fare": 18020, "refunded_taxes": 9703, "refunded_total": 27723, "operating_company": "Bek Air", "currency": "KZT"}}]
+=======
+<<<<<<< HEAD
+[{"full_name": "VLADIMIR SHITIKOV", "data": {"total_fare": 43580, "base_fare": 18330, "total_taxes": 25250, "taxes": [{"Type": "YQ", "Amount": 5258}, {"Type": "YR", "Amount": 16852}, {"Type": "UJ", "Amount": 1324}, {"Type": "RI", "Amount": 908}, {"Type": "RI", "Amount": 908}], "non_refundable taxes": 25250, "penalty": "18330", "refunded_fare": 0, "refunded_taxes": 0, "refunded_total": 0, "operating_company": "S7 Airlines", "currency": "KZT"}}]
+=======
+<<<<<<< HEAD
+[{"full_name": "TAE HYON KWON", "data": {"total_fare": 31223, "base_fare": 21520, "total_taxes": 9703, "taxes": [{"Type": "YQ", "Amount": 3138}, {"Type": "YR", "Amount": 5650}, {"Type": "UJ", "Amount": 915}], "non_refundable taxes": "", "penalty": "", "refunded_fare": "", "refunded_taxes": "", "refunded_total": "", "operating_company": "", "currency": "KZT"}}, {"full_name": "HUNKI PARK", "data": {"total_fare": 31223, "base_fare": 21520, "total_taxes": 9703, "taxes": [{"Type": "YQ", "Amount": 3138}, {"Type": "YR", "Amount": 5650}, {"Type": "UJ", "Amount": 915}], "non_refundable taxes": "", "penalty": "", "refunded_fare": "", "refunded_taxes": "", "refunded_total": "", "operating_company": "", "currency": "KZT"}}]
+=======
+[{"full_name": "VLADIMIR SHITIKOV", "data": {"total_fare": 43580, "base_fare": 18330, "total_taxes": 25250, "taxes": [{"Type": "YQ", "Amount": 5258}, {"Type": "YR", "Amount": 16852}, {"Type": "UJ", "Amount": 1324}, {"Type": "RI", "Amount": 908}, {"Type": "RI", "Amount": 908}], "non_refundable taxes": "", "penalty": "", "refunded_fare": "", "refunded_taxes": "", "refunded_total": "", "operating_company": "", "currency": "KZT"}}]
+>>>>>>> c918bb7a4246c870eb31e75ca1f93b8da8e46d51
+>>>>>>> 1ba902baba2a702f6284cc07d5006ea0862129c1
+>>>>>>> 9c861cbd0efa87eccf8af20e809e3fb1ba080f21
