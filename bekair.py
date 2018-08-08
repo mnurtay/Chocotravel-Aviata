@@ -5,7 +5,7 @@ class BekAir():
 	def __init__(self, data):
 		self.totalFare = int(data['totalFare'])		
 		self.baseFare = int(data['baseFare'])
-		self.rules = data['rules']					
+		self.rules = data['rules']			 		
 		self.taxes = data['taxes']					
 		self.now = data['dates'][0]					
 		self.depDate = data['dates'][1]
