@@ -1,5 +1,8 @@
+# from converter import Converter
+from validator import Validator
+from bs4 import BeautifulSoup
+
 import requests
-import bs4
 
 class Uzbekistan:
 
@@ -19,27 +22,38 @@ class Uzbekistan:
 		self.percent = False
 		self.penalty = ''
 
-		print('Total fare is ' + str(self.totalFare))
-		print('Base fare is ' + str(self.baseFare))
-		print('Taxes are ' + str(self.taxes))
-		print('Departure date is ' + str(self.depDate))
-		print(self.currency)
+		# print('Total fare is ' + str(self.totalFare))
+		# print('Base fare is ' + str(self.baseFare))
+		# print('Taxes are ' + str(self.taxes))
+		# print('Departure date is ' + str(self.depDate))
+		# print(self.currency)
+
+		# print(self.rules)
 
 		self.dom = True
 
-		# self.__set_values()
-		self.__set_values1()
+		self.__set_values()
 
 		# print('Fare rules is ' + str(self.rules))
 
 		self.non_ref = []				# array of nonrefundable taxes` types
 
 	def calculate(self):
-		if self.__check_status():
-			
-			if self.charge != '' and self.charge_cur != '':
-				self.penalty = round(self.__get_Exchange_Rates(self.charge_cur, self.charge))
+		# c = Converter()
 
+		# print(c.currencies())
+
+		if self.__check_status():
+
+			if self.charge != '' and self.charge_cur != '':
+				# print(self.charge_cur)
+				# print(self.charge)
+				# print(self.currency)
+
+				self.penalty = c.calc(self.charge_cur, float(self.charge), self.currency)
+
+				# print(self.penalty)
+				
 			elif self.charge != '' and self.percent:
 				self.penalty = round(self.baseFare * self.percent / 100)
 
@@ -82,19 +96,12 @@ class Uzbekistan:
 	def __check_status(self):		# check status of flight
 		return self.now < self.depDate
 
-	def __get_Exchange_Rates(self, course, amount):
-		site = requests.get('https://prodengi.kz/currency/')
-		html = bs4.BeautifulSoup(site.text, "html.parser")
-		price = None
-		if course=="EUR" or course=="RUB" or course=="USD":
-			tenge = html.select('.content_list .'+course+' .price_buy')
-			# print(tenge)
-			price = tenge[0].getText()
-			price = float(price) * float(amount)
-		return price
-	
-	def __set_values1(self):
+	def __set_values(self):
+		v = Validator()
+
 		ps = self.rules.split('\n\n')
+
+		# print(ps)
 
 		if 'BETWEEN' in ps[0] and 'UZBEKISTAN' in ps[0]:
 			self.dom = False
@@ -111,19 +118,19 @@ class Uzbekistan:
 					for qw in qwe:
 						if 'REFUND' in qw and 'CHARGE' in qw:
 							for i in range(len(qw)):
-								if self.__is_number(qw[i]):
+								if v.is_number(qw[i]):
 									self.charge = qw[i]
 
-									if self.__is_percent(qw[i+1]):
+									if v.is_percent(qw[i+1]):
 										self.percent = True
 
 										break
 
-								if self.__is_percent(qw[i]):
+								if v.is_percent(qw[i]):
 									self.percent = True
 							break
 
-					print(self.charge, '%')
+					# print(self.charge, '%')
 
 					break
 
@@ -136,7 +143,7 @@ class Uzbekistan:
 					s = list(p)
 
 					for i in range(1, len(s) - 1):
-						if s[i] == '.' and not self.__is_number(s[i-1]) and not self.__is_number(s[i+1]):
+						if s[i] == '.' and not v.is_number(s[i-1]) and not v.is_number(s[i+1]):
 							s[i] = ''
 
 					p = ''.join(s)
@@ -145,57 +152,21 @@ class Uzbekistan:
 
 					i = qwe.index('CHARGE')
 
-					if self.__is_currency(qwe[i+1]):
+					if v.is_currency(qwe[i+1]):
 						self.charge_cur = qwe[i+1]
 
-						if self.__is_number(qwe[i+2]):
+						if v.is_number(qwe[i+2]):
 							self.charge = qwe[i+2]
 
 						else:
 							for qw in qwe:
-								if self.__is_number(qw):
+								if v.is_number(qw):
 									self.charge = qwe[i+1]
 									break
 
-					print(self.charge, self.charge_cur)
+					# print(self.charge, self.charge_cur)
 
 					break
-
-	def __set_values(self):						# set values for calculating change
-		ps = self.rules.split('\n\n')
-
-		# print(ps)
-
-		if 'BETWEEN' in ps[0]:
-			self.dom = False
-
-		for p in ps:
-			qwe = self.__split_all(p)
-
-			if self.dom:
-				if 'CANCELLATION' in qwe and 'REFUND' in qwe:
-					for qw in qwe:
-						if self.__is_number(qw):
-							self.charge = qw
-
-						elif self.__is_percent(qw):
-							self.percent = True
-
-			else:
-				if 'CANCELLATIONS' in qwe and 'REFUND' in qwe and 'AFTER' not in qwe:
-					for qw in qwe:
-						if self.__is_number(qw):
-							self.charge = qw
-
-						elif self.__is_currency(qw):
-							self.charge_cur = qw
-
-		# if self.dom:
-		# 	if self.percent:
-		# 		print(self.charge + '%')
-
-		# else:
-		# 	print(self.charge + ' ' + self.charge_cur)
 
 	def __split_all(self, p):
 		qwe = []
@@ -212,24 +183,3 @@ class Uzbekistan:
 				qwe.append(word)
 
 		return qwe
-
-	def __is_percent(self, text):
-		if text == 'PERCENT' or text == 'PCT':
-			return True
-
-		return False
-
-	def __is_number(self, text):
-		try:
-			a = float(text)
-			# print(a)
-			return True
-
-		except:
-			return False
-
-	def __is_currency(self, text):
-		if text == 'EUR' or text == 'USD' or text == 'KZT' or text == 'UZS':
-			return True
-
-		return False

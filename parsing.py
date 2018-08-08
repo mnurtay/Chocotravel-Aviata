@@ -19,41 +19,89 @@ class Parser:
 
 		self.data = self.__get_data()
 
+		self.cities = self.__get_cities()
+
+	def __get_cities(self):
+		cities = []
+
+		try:
+			fares = json.loads(self.fare_rule['tarif_xml'])['fares']
+
+			for fare in fares:
+				pair = {}
+
+				pair['city_depart'] = fare['city_depart']
+				pair['city_arrive'] = fare['city_arrive']
+
+				cities.append(pair)
+
+			# print(cities)
+
+			return cities
+
+		except:
+			return [['Error', 'Error']]
+
 	def __get_data(self):			# group all data by each person in one array
 		if self.__check_pair():
 			data = []
 
 			for i in range(len(self.company_codes)):
+				
+				# print(self.total_fares[i])
+				# print(self.base_fares[i])
+				# print(self.taxes[i])
+				# print(self.dates[i])
+				# print(self.company_codes[i])
+				# print(self.currencies[i])
+
+				dt = {}
+
 				try:
-					# print(self.total_fares[i])
-					# print(self.base_fares[i])
-					# print(self.taxes[i])
-					# print(self.dates[i])
-					# print(self.company_codes[i])
-					# print(self.currencies[i])
-
-					dt = {
-						'totalFare': self.total_fares[i],
-						'baseFare': self.base_fares[i],
-						'taxes': self.taxes[i],
-						'dates': self.dates[i],
-						'company_codes': self.company_codes[i],
-						'currencies': self.currencies[i],
-						'rules': self.rules
-					}
-					# print(str(dt))
-
-					data.append(dt)
-
+					dt['totalFare'] = self.total_fares[i]
 				except:
-					data.append('Error')	# exception in creating of dt dictionary
+					dt['totalFare'] = 'NA'
 
+				try:
+					dt['baseFare'] = self.base_fares[i]
+				except:
+					dt['baseFare'] = 'NA'
+
+				try:
+					dt['taxes'] = self.taxes[i]
+				except:
+					dt['taxes'] = ['NA']
+
+				try:
+					dt['dates'] = self.dates[i]
+				except:
+					dt['dates'] = 'NA'
+
+				try:
+					dt['company_codes'] = self.company_codes[i]
+				except:
+					dt['company_codes'] = 'NA'
+
+				try:
+					dt['currencies'] = self.currencies[i]
+				except:
+					dt['currencies'] = 'NA'
+
+				try:
+					dt['rules'] = self.rules
+				except:
+					dt['rules'] = 'NA'
+
+				# print(str(dt))
+
+				data.append(dt)
+				
 			# print(data)
 
 			return data
 
 		else:
-			return ['Error']	# exception in checking pair
+			return {'Error': 'Pairs match'}	# exception in checking pair
 
 	def __check_pair(self):		# check for valid pair of booking and fare_rule
 		return self.booking['cid'] == self.fare_rule['combination_id']
@@ -198,20 +246,27 @@ class Parser:
 
 	def __get_rules(self):			# get text of rules for penalties
 		try:
-			rules = json.loads(self.fare_rule['tarif_xml'])['rules'][0]
-			text = ''
+			ruless = json.loads(self.fare_rule['tarif_xml'])['rules']
+			texts = []
 
-			for rule in rules:
-				if rule['rule_title'] == 'PENALTIES':
-					text += rule['rule_text']
+			for rules in ruless:
+				try:
+					text = ''
 
-			text = text.replace('        ', '').replace('       ', '').replace('      ', '')
-			text = text.replace('     ', '').replace('    ', '').replace('   ', '')
-			text = text.replace('  ', '').replace(' <br>', '')
+					for rule in rules:
+						if rule['rule_title'] == 'PENALTIES':
+							text += rule['rule_text']
 
-			# print(text)
+					text = text.replace('        ', '').replace('       ', '').replace('      ', '')
+					text = text.replace('     ', '').replace('    ', '').replace('   ', '')
+					text = text.replace('  ', '').replace(' <br>', '')
 
-			return text
+					texts.append(text)
+
+				except:
+					pass
+
+			return texts
 
 		except:
 			return 'Error'			# exception in getting tarif_xml from fare_rules
@@ -303,8 +358,33 @@ class Parser:
 		for i in range(len(self.data)):
 			# print(self.data[i])
 
-			dt = self.__calculate(self.data[i])
-	
+			if self.data[i] == {'Error': 'Pairs match'}:
+				continue
+
+			dts = []
+
+			for text in self.data[i]['rules']:
+				dt = self.data[i]
+
+				dt['rules'] = text
+
+				# print(dt)
+
+				dts.append(dt)
+
+			ress = []
+
+			for dt in dts:
+				res = self.__calculate(dt)
+
+				ress.append(res['refunded_total'])
+
+				print(res['refunded_total'])
+
+			# print(ress.index(max(ress)))
+
+			dt = self.__calculate(dts[ress.index(max(ress))])
+
 			# print(dt)
 
 			data = {}
@@ -313,64 +393,76 @@ class Parser:
 				data['full_name'] = self.full_names[i]
 
 			except:
-				data['full_name'] = ''			# exception in getting single full name
+				data['full_name'] = 'NA'			# exception in getting single full name
+
+			try:
+				data['departure_date'] = str(self.dates[i][1])
+
+			except:
+				data['departure_date'] = 'NA'
+
+			try:
+				data['cities'] = self.cities
+
+			except:
+				data['cities'] = 'NA'
 
 			inner_data = {}
 
 			try:
 				inner_data['total_fare'] = self.total_fares[i]
 			except:
-				inner_data['total_fare'] = ''	# exception in getting single total fare
+				inner_data['total_fare'] = 'NA'	# exception in getting single total fare
 
 			try:
 				inner_data['base_fare'] = self.base_fares[i]
 			except:
-				inner_data['base_fare'] = ''	# exception in getting single base fare
+				inner_data['base_fare'] = 'NA'	# exception in getting single base fare
 
 			try:
 				inner_data['total_taxes'] = self.total_fares[i] - self.base_fares[i]
 			except:
-				inner_data['total_taxes'] = ''	# exception in getting single total taxes
+				inner_data['total_taxes'] = 'NA'	# exception in getting single total taxes
 
 			try:
 				inner_data['taxes'] = self.taxes[i]
 			except:
-				inner_data['taxes'] = ''		# exception in getting single taxes
+				inner_data['taxes'] = 'NA'		# exception in getting single taxes
 
 			try:
 				inner_data['non_refundable taxes'] = dt['non_refundable taxes']
 			except:
-				inner_data['non_refundable taxes'] = ''		# exception in getting single nonrefundable taxes
+				inner_data['non_refundable taxes'] = 'NA'		# exception in getting single nonrefundable taxes
 
 			try:
 				inner_data['penalty'] = dt['penalty']
 			except:
-				inner_data['penalty'] = ''		# exception in getting single penalty
+				inner_data['penalty'] = 'NA'	# exception in getting single penalty
 				
 			try:		
 				inner_data['refunded_fare'] = dt['refunded_fare']
 			except:
-				inner_data['refunded_fare'] = ''	# exception in getting single refunded fare
+				inner_data['refunded_fare'] = 'NA'	# exception in getting single refunded fare
 
 			try:
 				inner_data['refunded_taxes'] = dt['refunded_taxes']
 			except:
-				inner_data['refunded_taxes'] = ''	# exception in getting single refunded taxes
+				inner_data['refunded_taxes'] = 'NA'	# exception in getting single refunded taxes
 
 			try:
 				inner_data['refunded_total'] = dt['refunded_total']
 			except:
-				inner_data['refunded_total'] = ''	# exception in getting single total refund
+				inner_data['refunded_total'] = 'NA'	# exception in getting single total refund
 
 			try:
 				inner_data['operating_company'] = dt['name']
 			except:
-				inner_data['operating_company'] = ''	# exception in getting single operating company
+				inner_data['operating_company'] = 'NA'	# exception in getting single operating company
 
 			try:
 				inner_data['currency'] = self.currencies[i]
 			except:
-				inner_data['currency'] = ''		# exception in getting single currency
+				inner_data['currency'] = 'NA'		# exception in getting single currency
 
 			data['data'] = inner_data
 
@@ -387,7 +479,7 @@ class Parser:
 		# print(data['currencies'])
 		# print(data['dates'])
 
-		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != 'Error' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
+		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != '' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
 
 			comp =	 None
 
