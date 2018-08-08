@@ -13,11 +13,9 @@ class Turkish:
         self.currencies = data["currencies"]
         self.rules = data["rules"]
         self.ticketStatus = "OK"
-        self.check = None
+        self.check = True
     
-    def calculate(self):      
-        rules = self.rules.split("\n")
-        print(rules)
+    def calculate(self):
         cancellation = []
         penalty = []
         non_refunded_tax = 0
@@ -25,7 +23,7 @@ class Turkish:
         refunded_taxes = 0
         check = 0
         
-        for rule in rules:
+        for rule in self.rules.split("\n"):
             if "CHANGES" in rule:
                 check = 1
             elif "CANCELLATIONS" in rule:
@@ -55,40 +53,37 @@ class Turkish:
                             penalty.append(float(r))
                         except:
                             pass
-            if "SURCHARGE" in rule or "TAX" in rule:
-                for tax in self.taxes:
-                    if tax["Type"] in rule:
-                        non_refunded_taxes.append(tax)
+        if self.check:
+            for rule in cancellation:
+                if "SURCHARGE" in rule or "TAX" in rule:
+                    for tax in self.taxes:
+                        if tax["Type"] in rule:
+                            non_refunded_taxes.append(tax)
         non_refunded_tax = self.totalTaxes
         if len(non_refunded_taxes) != 0:
             non_refunded_tax = self.__non_refundable_taxes(non_refunded_taxes)
         
         non_ref_fare = 0
         if self.check:
-            non_ref_fare = round(self.__get_Exchange_Rates(penalty), 1)
+            from converter import Converter
+            conv = Converter()
+            non_ref_fare = conv.calc(penalty[0], penalty[1], self.currencies)
         else:
             non_ref_fare = self.baseFare
-        
-        if non_refunded_taxes == 0:
-            refunded_taxes = self.totalTaxes
-        else:
-            refunded_taxes = self.totalTaxes - non_refunded_tax
 
         output = {
             'name': "Turkish AirLine",
             'currency': self.currencies,
             'refunded_fare': self.baseFare - non_ref_fare,
+            'refunded_taxes': self.totalTaxes - non_refunded_tax,
+            'non_refundable taxes': non_refunded_tax
         }
         
         if self.check:
             output['penalty'] = str(penalty[1])+" "+penalty[0]+" or "+str(non_ref_fare)+" "+"KZT"
-            output['non_refundable taxes'] = self.totalTaxes
-            output['refunded_taxes'] = refunded_taxes
             output['refunded_total'] = (self.baseFare-non_ref_fare)+refunded_taxes
         else:
-            output['penalty'] = str(self.baseFare)
-            output['non_refundable taxes'] = non_refunded_tax
-            output['refunded_taxes'] = 0
+            output['penalty'] = self.baseFare
             output['refunded_total'] = 0
         return output
 
@@ -97,12 +92,3 @@ class Turkish:
         for tax in taxes:
             amount += tax["Amount"]
         return amount
-
-    def __get_Exchange_Rates(self, data):
-        site = requests.get('https://prodengi.kz/currency/')
-        html = bs4.BeautifulSoup(site.text, "html.parser")
-        if data[0]=="EUR" or data[0]=="RUB" or data[0]=="USD":
-            tenge = html.select('.content_list .'+data[0]+' .price_buy')
-            out = tenge[0].getText()
-            out = float(out) * float(data[1])
-        return out
