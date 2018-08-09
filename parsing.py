@@ -372,8 +372,31 @@ class Parser:
 			if self.data[i] == {'Error': 'Pairs match'}:
 				continue
 
-			print(self.data[i])
-			
+			# print(self.data[i])
+
+			qwert = []
+			qwerty = []
+
+			for text in self.data[i]['rules']:
+				# print(text)
+
+				qw = self.data[i]
+
+				qw['rules'] = text
+
+				qwer = self.__calculate(qw)
+				# print(qwer)
+				
+				qwert.append(qwer['refunded_total'])
+				qwerty.append(qwer)
+
+
+			print(qwert)
+
+			# print(qwert.index(min(qwert)))
+
+			dt = qwerty[qwert.index(min(qwert))]
+
 			data = {}
 
 			try:
