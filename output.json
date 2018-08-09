@@ -1,1 +1,46 @@
-[{"full_name": "ALEXEY CHAGAY", "departure_date": "2018-08-30 18:55:00", "cities": [{"city_depart": "ALA", "city_arrive": "TAS"}, {"city_depart": "TAS", "city_arrive": "ALA"}], "data": {"total_fare": 56499, "base_fare": 42677, "total_taxes": 13822, "taxes": [{"Type": "CS", "Amount": 817}, {"Type": "UJ", "Amount": 2841}, {"Type": "UZ", "Amount": 6098}, {"Type": "FX", "Amount": 4066}], "non_refundable taxes": "NA", "penalty": "NA", "refunded_fare": "NA", "refunded_taxes": "NA", "refunded_total": "NA", "operating_company": "NA", "currency": "KZT"}}]
+[
+  {
+    "full_name": "ALEXEY CHAGAY",
+    "departure_date": "2018-08-30 18:55:00",
+    "cities": [
+      {
+        "city_depart": "ALA",
+        "city_arrive": "TAS"
+      },
+      {
+        "city_depart": "TAS",
+        "city_arrive": "ALA"
+      }
+    ],
+    "data": {
+      "total_fare": 56499,
+      "base_fare": 42677,
+      "total_taxes": 13822,
+      "taxes": [
+        {
+          "Type": "CS",
+          "Amount": 817
+        },
+        {
+          "Type": "UJ",
+          "Amount": 2841
+        },
+        {
+          "Type": "UZ",
+          "Amount": 6098
+        },
+        {
+          "Type": "FX",
+          "Amount": 4066
+        }
+      ],
+      "non_refundable taxes": "NA",
+      "penalty": "NA",
+      "refunded_fare": "NA",
+      "refunded_taxes": "NA",
+      "refunded_total": "NA",
+      "operating_company": "NA",
+      "currency": "KZT"
+    }
+  }
+]

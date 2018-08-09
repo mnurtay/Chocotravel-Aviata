@@ -5,12 +5,12 @@ class BekAir():
 	def __init__(self, data):
 		self.totalFare = int(data['totalFare'])		
 		self.baseFare = int(data['baseFare'])
-		self.rules = data['rules']					
+		self.rules = data['rules']			 		
 		self.taxes = data['taxes']					
 		self.now = data['dates'][0]					
 		self.depDate = data['dates'][1]
 		self.totalTaxes = self.totalFare-self.baseFare
-		#self.company_codes = data['company_codes']
+		self.company_codes = data['company_codes']
 		self.currencies = data['currencies']
 		self.name = 'Bek Air'	
 
@@ -42,7 +42,7 @@ class BekAir():
 				self.total = self.totalFare - before - self.non_refundable_taxes
 
 				output = {}
-				output['non_refundable_taxes'] = self.non_refundable_taxes
+				output['non_refundable taxes'] = self.non_refundable_taxes
 				output['penalty'] = before
 				output['refunded_fare'] = self.sum_fare
 				output['refunded_taxes'] = self.totalTaxes
@@ -60,24 +60,36 @@ class BekAir():
 	def __set_values(self):
 		words = self.rules.split('\n')
 		
+		cancellation = []
 
 		#print(words)
 		ch = 0
 		for rule in words:
+			#print(rule)
 			if "CHANGES" in rule:
 			 	ch = 1
 			elif "CANCELLATIONS" in rule:
 			 	ch = 2
-			elif "BEFORE DEPARTURE" in rule:
-			 	ch = 3
-			if "CHARGE KZT" in rule and ch == 3:
-			 		#print(rule.split()[2])
-			 		bef = rule.split()[2]
-			 		bef = int(bef.split('.')[0])
-			 		
-			 		# print(bef)
-			 		break
-		return bef
+
+			if ch == 2:
+				cancellation.append(rule)
+		
+		ch = 0
+		for rule in cancellation:
+			#print(rule)
+			
+			if "BEFORE DEPARTURE" in rule:
+				ch = 1
+			elif "AFTER DEPARTURE" in rule:
+				ch = 2
+
+			if "CHARGE KZT" in rule and ch == 1:
+			
+				bef = rule.split()[2]
+				bef = int(bef.split('.')[0])
+				#print(bef)
+
+				break
 
 			# if 'CHANGES' in rule:
 			# 	self.check = 1
