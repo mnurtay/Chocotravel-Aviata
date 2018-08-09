@@ -69,13 +69,13 @@ class BekAir():
 			elif "CANCELLATIONS" in rule:
 			 	ch = 2
 			elif "BEFORE DEPARTURE" in rule:
-			 		ch = 3
+			 	ch = 3
 			if "CHARGE KZT" in rule and ch == 3:
 			 		#print(rule.split()[2])
 			 		bef = rule.split()[2]
 			 		bef = int(bef.split('.')[0])
 			 		
-			 		#print(bef)
+			 		# print(bef)
 			 		break
 		return bef
 

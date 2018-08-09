@@ -28,7 +28,7 @@ class Uzbekistan:
 		# print('Departure date is ' + str(self.depDate))
 		# print(self.currency)
 
-		# print(self.rules)
+		print(self.rules)
 
 		self.dom = True
 
@@ -164,7 +164,7 @@ class Uzbekistan:
 									self.charge = qwe[i+1]
 									break
 
-					# print(self.charge, self.charge_cur)
+					print(self.charge, self.charge_cur)
 
 					break
 

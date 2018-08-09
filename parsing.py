@@ -250,21 +250,32 @@ class Parser:
 			texts = []
 
 			for rules in ruless:
+				# print(rules)
+
 				try:
 					text = ''
 
 					for rule in rules:
 						if rule['rule_title'] == 'PENALTIES':
-							text += rule['rule_text']
+							text = rule['rule_text']
+							# print('asd')
+
+							break
 
 					text = text.replace('        ', '').replace('       ', '').replace('      ', '')
 					text = text.replace('     ', '').replace('    ', '').replace('   ', '')
 					text = text.replace('  ', '').replace(' <br>', '')
 
 					texts.append(text)
+					# print('qwe')
+
+					# print(text)
+					# print('------------------')
 
 				except:
 					pass
+
+			# print(texts)
 
 			return texts
 
@@ -361,32 +372,8 @@ class Parser:
 			if self.data[i] == {'Error': 'Pairs match'}:
 				continue
 
-			dts = []
-
-			for text in self.data[i]['rules']:
-				dt = self.data[i]
-
-				dt['rules'] = text
-
-				# print(dt)
-
-				dts.append(dt)
-
-			ress = []
-
-			for dt in dts:
-				res = self.__calculate(dt)
-
-				ress.append(res['refunded_total'])
-
-				print(res['refunded_total'])
-
-			# print(ress.index(max(ress)))
-
-			dt = self.__calculate(dts[ress.index(max(ress))])
-
-			# print(dt)
-
+			print(self.data[i])
+			
 			data = {}
 
 			try:
