@@ -1,7 +1,7 @@
 import xml.dom.minidom
 
 class BekAir():
- 
+    
 	def __init__(self, data):
 		self.totalFare = int(data['totalFare'])		
 		self.baseFare = int(data['baseFare'])
