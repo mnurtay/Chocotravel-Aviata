@@ -74,6 +74,7 @@ class Parser:
 
 				try:
 					dt['dates'] = self.dates[i]
+<<<<<<< HEAD
 				except:
 					dt['dates'] = 'NA'
 
@@ -92,6 +93,26 @@ class Parser:
 				except:
 					dt['rules'] = 'NA'
 
+=======
+				except:
+					dt['dates'] = 'NA'
+
+				try:
+					dt['company_codes'] = self.company_codes[i]
+				except:
+					dt['company_codes'] = 'NA'
+
+				try:
+					dt['currencies'] = self.currencies[i]
+				except:
+					dt['currencies'] = 'NA'
+
+				try:
+					dt['rules'] = self.rules
+				except:
+					dt['rules'] = 'NA'
+
+>>>>>>> Zhandos
 				# print(str(dt))
 
 				data.append(dt)
@@ -250,11 +271,17 @@ class Parser:
 			texts = []
 
 			for rules in ruless:
+<<<<<<< HEAD
+=======
+				# print(rules)
+
+>>>>>>> Zhandos
 				try:
 					text = ''
 
 					for rule in rules:
 						if rule['rule_title'] == 'PENALTIES':
+<<<<<<< HEAD
 							text += rule['rule_text']
 
 					text = text.replace('        ', '').replace('       ', '').replace('      ', '')
@@ -265,6 +292,27 @@ class Parser:
 
 				except:
 					pass
+=======
+							text = rule['rule_text']
+							# print('asd')
+
+							break
+
+					text = text.replace('        ', '').replace('       ', '').replace('      ', '')
+					text = text.replace('     ', '').replace('    ', '').replace('   ', '')
+					text = text.replace('  ', '').replace(' <br>', '')
+
+					texts.append(text)
+					# print('qwe')
+
+					# print(text)
+					# print('------------------')
+
+				except:
+					pass
+
+			# print(texts)
+>>>>>>> Zhandos
 
 			return texts
 
@@ -281,6 +329,7 @@ class Parser:
 				try:
 
 					departureDate = booking['Routes'][0]['DepartureDate']
+					print(departureDate)
 					currentDate = datetime.datetime.now().isoformat()
 
 					# split string
@@ -293,6 +342,8 @@ class Parser:
 					currentDate = self.__cast_date(currentDate)
 
 					dates.append([currentDate, departureDate])
+
+					print(dates)
 
 				except:
 					dates.append(['Error', 'Error'])	# exception in getting single date pair
@@ -361,6 +412,7 @@ class Parser:
 			if self.data[i] == {'Error': 'Pairs match'}:
 				continue
 
+<<<<<<< HEAD
 			dts = []
 
 			for text in self.data[i]['rules']:
@@ -386,6 +438,32 @@ class Parser:
 			dt = self.__calculate(dts[ress.index(max(ress))])
 
 			# print(dt)
+=======
+			# print(self.data[i])
+
+			qwert = []
+			qwerty = []
+
+			for text in self.data[i]['rules']:
+				# print(text)
+
+				qw = self.data[i]
+
+				qw['rules'] = text
+
+				qwer = self.__calculate(qw)
+				print(qwer)
+				
+				qwert.append(qwer['refunded_total'])
+				qwerty.append(qwer)
+
+
+			print(qwert)
+
+			# print(qwert.index(min(qwert)))
+
+			dt = qwerty[qwert.index(min(qwert))]
+>>>>>>> Zhandos
 
 			data = {}
 
@@ -481,7 +559,7 @@ class Parser:
 
 		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != '' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
 
-			comp =	 None
+			comp = None
 
 			if data['company_codes'] == 'DV':	# Scat`s code
 				from scat import Scat
@@ -513,4 +591,4 @@ class Parser:
 			except:
 				return {'Error': 'Error in class calculation'}	# exception in class calculate
 		else:
-			return {'Error': 'Error in value check'}	# exception in value check
+			return {'Error': 'Error in value check'}	# exception in value check`
