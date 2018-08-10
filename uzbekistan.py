@@ -1,8 +1,5 @@
-# from converter import Converter
+from converter import Converter
 from validator import Validator
-from bs4 import BeautifulSoup
-
-import requests
 
 class Uzbekistan:
 
@@ -28,7 +25,7 @@ class Uzbekistan:
 		# print('Departure date is ' + str(self.depDate))
 		# print(self.currency)
 
-		print(self.rules)
+		# print(self.rules)
 
 		self.dom = True
 
@@ -39,7 +36,7 @@ class Uzbekistan:
 		self.non_ref = []				# array of nonrefundable taxes` types
 
 	def calculate(self):
-		# c = Converter()
+		c = Converter()
 
 		# print(c.currencies())
 

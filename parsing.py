@@ -292,6 +292,7 @@ class Parser:
 				try:
 
 					departureDate = booking['Routes'][0]['DepartureDate']
+					print(departureDate)
 					currentDate = datetime.datetime.now().isoformat()
 
 					# split string
@@ -304,6 +305,8 @@ class Parser:
 					currentDate = self.__cast_date(currentDate)
 
 					dates.append([currentDate, departureDate])
+
+					print(dates)
 
 				except:
 					dates.append(['Error', 'Error'])	# exception in getting single date pair
@@ -385,7 +388,7 @@ class Parser:
 				qw['rules'] = text
 
 				qwer = self.__calculate(qw)
-				# print(qwer)
+				print(qwer)
 				
 				qwert.append(qwer['refunded_total'])
 				qwerty.append(qwer)
@@ -491,7 +494,7 @@ class Parser:
 
 		if data['totalFare'] != -1 and data['baseFare'] != -1 and data['rules'] != '' and data['taxes'] != [['Error']] and data['company_codes'] != 'Error' and data['currencies'] != 'Error' and data['dates'] != ['Error', 'Error']:
 
-			comp =	 None
+			comp = None
 
 			if data['company_codes'] == 'DV':	# Scat`s code
 				from scat import Scat

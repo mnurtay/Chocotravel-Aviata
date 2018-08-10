@@ -1,4 +1,4 @@
-# class for currency exchange based on http://bankir.ru/kurs/valuta/
+# class for currency exchange based on https://prodengi.kz/
 
 import requests
 
@@ -18,13 +18,13 @@ class Converter:
 			return round(self.__second(first, amount, second), 2)
 
 	def __first(self, first, amount):
-		price = self.bs.celect('.content_list .'+first+' .price_buy')
+		price = self.bs.select('.content_list .'+first+' .price_buy')
 		return float(price[0].getText()) * float(amount)
 	
 	def __second(self, first, amount, second):
-		temp_price = self.bs.celect('.content_list .'+first+' .price_buy')
+		temp_price = self.bs.select('.content_list .'+first+' .price_buy')
 		temp_price = float(temp_price) * float(amount)
-		temp_price_2 = self.bs.celect('.content_list .'+second+' .price_buy')
+		temp_price_2 = self.bs.select('.content_list .'+second+' .price_buy')
 		temp_price_2 = 1 / float(temp_price_2)
 		return temp_price * temp_price_2
 
