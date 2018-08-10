@@ -24,6 +24,8 @@ class Scat:
 		self.non_ref = ['YR']				# array of nonrefundable taxes` types
 		self.mode = 'Error'					# mode ('before/before', 'before/after', 'Error')
 
+		# print(self.rules)
+
 	def calculate(self):
 		# print(self.minutes)
 		# print(self.first)

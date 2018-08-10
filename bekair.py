@@ -1,5 +1,4 @@
 import xml.dom.minidom
-import requests
 
 class BekAir():
     
@@ -102,6 +101,3 @@ class BekAir():
 			# 	self.check = 2
 				
 			#break
-
-	
-				

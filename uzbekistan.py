@@ -1,8 +1,5 @@
-# from converter import Converter
+from converter import Converter
 from validator import Validator
-from bs4 import BeautifulSoup
-
-import requests
 
 class Uzbekistan:
 
@@ -39,7 +36,7 @@ class Uzbekistan:
 		self.non_ref = []				# array of nonrefundable taxes` types
 
 	def calculate(self):
-		# c = Converter()
+		c = Converter()
 
 		# print(c.currencies())
 
@@ -164,7 +161,7 @@ class Uzbekistan:
 									self.charge = qwe[i+1]
 									break
 
-					# print(self.charge, self.charge_cur)
+					print(self.charge, self.charge_cur)
 
 					break
 

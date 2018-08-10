@@ -74,7 +74,6 @@ class Parser:
 
 				try:
 					dt['dates'] = self.dates[i]
-<<<<<<< HEAD
 				except:
 					dt['dates'] = 'NA'
 
@@ -93,26 +92,6 @@ class Parser:
 				except:
 					dt['rules'] = 'NA'
 
-=======
-				except:
-					dt['dates'] = 'NA'
-
-				try:
-					dt['company_codes'] = self.company_codes[i]
-				except:
-					dt['company_codes'] = 'NA'
-
-				try:
-					dt['currencies'] = self.currencies[i]
-				except:
-					dt['currencies'] = 'NA'
-
-				try:
-					dt['rules'] = self.rules
-				except:
-					dt['rules'] = 'NA'
-
->>>>>>> Zhandos
 				# print(str(dt))
 
 				data.append(dt)
@@ -271,28 +250,13 @@ class Parser:
 			texts = []
 
 			for rules in ruless:
-<<<<<<< HEAD
-=======
 				# print(rules)
 
->>>>>>> Zhandos
 				try:
 					text = ''
 
 					for rule in rules:
 						if rule['rule_title'] == 'PENALTIES':
-<<<<<<< HEAD
-							text += rule['rule_text']
-
-					text = text.replace('        ', '').replace('       ', '').replace('      ', '')
-					text = text.replace('     ', '').replace('    ', '').replace('   ', '')
-					text = text.replace('  ', '').replace(' <br>', '')
-
-					texts.append(text)
-
-				except:
-					pass
-=======
 							text = rule['rule_text']
 							# print('asd')
 
@@ -312,7 +276,6 @@ class Parser:
 					pass
 
 			# print(texts)
->>>>>>> Zhandos
 
 			return texts
 
@@ -412,33 +375,6 @@ class Parser:
 			if self.data[i] == {'Error': 'Pairs match'}:
 				continue
 
-<<<<<<< HEAD
-			dts = []
-
-			for text in self.data[i]['rules']:
-				dt = self.data[i]
-
-				dt['rules'] = text
-
-				# print(dt)
-
-				dts.append(dt)
-
-			ress = []
-
-			for dt in dts:
-				res = self.__calculate(dt)
-
-				ress.append(res['refunded_total'])
-
-				print(res['refunded_total'])
-
-			# print(ress.index(max(ress)))
-
-			dt = self.__calculate(dts[ress.index(max(ress))])
-
-			# print(dt)
-=======
 			# print(self.data[i])
 
 			qwert = []
@@ -463,7 +399,6 @@ class Parser:
 			# print(qwert.index(min(qwert)))
 
 			dt = qwerty[qwert.index(min(qwert))]
->>>>>>> Zhandos
 
 			data = {}
 
@@ -591,4 +526,4 @@ class Parser:
 			except:
 				return {'Error': 'Error in class calculation'}	# exception in class calculate
 		else:
-			return {'Error': 'Error in value check'}	# exception in value check`
+			return {'Error': 'Error in value check'}	# exception in value check
