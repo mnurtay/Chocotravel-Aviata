@@ -161,7 +161,7 @@ class Uzbekistan:
 									self.charge = qwe[i+1]
 									break
 
-					print(self.charge, self.charge_cur)
+					#print(self.charge, self.charge_cur)
 
 					break
 

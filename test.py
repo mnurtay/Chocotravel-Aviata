@@ -17,7 +17,7 @@ def write_data(data):
 	with open('outputs.json', 'w') as f:
 		json.dump(data, f, ensure_ascii=False)
 		
-	print('Success')
+	#print('Success')
 
 def main():
 	first = datetime.now()
@@ -46,7 +46,7 @@ def main():
 					break
 
 			if fare == None or fare == '':
-				print('No match -> ' + str(cid))
+				#print('No match -> ' + str(cid))
 
 				dt = {'test': 'No match'}
 
@@ -67,7 +67,7 @@ def main():
 
 
 			if is_valid:
-				print('Success -> ' + str(cid))
+				#print('Success -> ' + str(cid))
 
 				main_data = []
 
@@ -80,7 +80,7 @@ def main():
 				continue
 
 			else:
-				print('Error -> ' + str(cid))
+				#print('Error -> ' + str(cid))
 
 				dt = {'test': 'Error'}
 
@@ -89,7 +89,7 @@ def main():
 				continue
 
 		except:
-			print('Exception -> ' + str(cid))
+			#print('Exception -> ' + str(cid))
 
 			dt = {'test': 'Exception'}
 
@@ -102,8 +102,8 @@ def main():
 	write_data(qwe)
 
 	second = datetime.now()
-
-	print(second - first)
+	print("it only took", second - first, "seconds")
+	
 
 if __name__ == '__main__':
 	main()

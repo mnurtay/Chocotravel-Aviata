@@ -292,7 +292,7 @@ class Parser:
 				try:
 
 					departureDate = booking['Routes'][0]['DepartureDate']
-					print(departureDate)
+					#print(departureDate)
 					currentDate = datetime.datetime.now().isoformat()
 
 					# split string
@@ -306,7 +306,7 @@ class Parser:
 
 					dates.append([currentDate, departureDate])
 
-					print(dates)
+					#print(dates)
 
 				except:
 					dates.append(['Error', 'Error'])	# exception in getting single date pair
@@ -388,13 +388,13 @@ class Parser:
 				qw['rules'] = text
 
 				qwer = self.__calculate(qw)
-				print(qwer)
+				#print(qwer)
 				
 				qwert.append(qwer['refunded_total'])
 				qwerty.append(qwer)
 
 
-			print(qwert)
+			#print(qwert)
 
 			# print(qwert.index(min(qwert)))
 
